@@ -111,41 +111,46 @@ YValid = YValid(:);
 YTest  = YTest(:);
 %% === 3. Define Light CNN Architecture ===
 layers = [
-    imageInputLayer([110 1 1],'Name','input','Normalization','none')  % Treat features as 1D image
+    imageInputLayer([110 1 1],'Name','input','Normalization','none')  % 1D feature input
 
-    convolution2dLayer([10 1], 16, 'Padding','same', 'Name','conv1')   % 5-feature filter
+    convolution2dLayer([10 1], 16, 'Padding','same', 'Name','conv1')
     batchNormalizationLayer('Name','bn1')
     reluLayer('Name','relu1')
-
     maxPooling2dLayer([2 1], 'Stride',[2 1], 'Name','pool1')
 
-    convolution2dLayer([5 1], 32, 'Padding','same', 'Name','conv2')   % 5-feature filter
+    convolution2dLayer([5 1], 32, 'Padding','same', 'Name','conv2')
     batchNormalizationLayer('Name','bn2')
     reluLayer('Name','relu2')
-
     maxPooling2dLayer([2 1], 'Stride',[2 1], 'Name','pool2')
 
     convolution2dLayer([3 1], 64, 'Padding','same', 'Name','conv3')
     batchNormalizationLayer('Name','bn3')
     reluLayer('Name','relu3')
 
+    dropoutLayer(0.5, 'Name', 'drop1')  % Helps prevent overfitting
+
     fullyConnectedLayer(32, "Name", "fc1")
     reluLayer("Name", "relu4")
-    
+
     fullyConnectedLayer(1, "Name", "output_fc")
     regressionLayer("Name", "regressionoutput")
 ];
 
+
 %% === 4. Training Options ===
-options = trainingOptions("adam", ...
-    "ExecutionEnvironment", "auto", ...      % uses GPU if available
-    "MaxEpochs", 100, ...
-    "MiniBatchSize", 1024, ...
-    "InitialLearnRate", 1e-3, ...
-    "ValidationData", {XValid4D, YValid}, ...
-    "ValidationFrequency", 50, ...
-    "Plots", "training-progress", ...
-    "Verbose", true);
+options = trainingOptions('adam', ...
+    'MaxEpochs', 50, ...
+    'MiniBatchSize', 64, ...
+    'InitialLearnRate', 1e-4, ...
+    'ValidationData', {XValid4D, YValid}, ...
+    'ValidationFrequency', 30, ...
+    'ValidationPatience', 5, ...
+    'Shuffle', 'every-epoch', ...
+    'Plots', 'training-progress', ...
+    'Verbose', false, ...
+    'ExecutionEnvironment', 'auto', ...
+    'L2Regularization', 0.0001);
+
 
 %% === 5. Train the Network ===
 net = trainNetwork(XTrain4D, YTrain, layers, options);
