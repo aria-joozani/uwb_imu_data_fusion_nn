@@ -10,12 +10,12 @@ clc; clear; close all;
 
 % List of CSV files
 csvFiles = {
-    '..\dataSet\flight-dataset\csv-data\const1\const1-trial1-tdoa2_NN.csv';
-    '..\dataSet\flight-dataset\csv-data\const1\const1-trial2-tdoa2_NN.csv';
-    '..\dataSet\flight-dataset\csv-data\const1\const1-trial3-tdoa2_NN.csv';
-    '..\dataSet\flight-dataset\csv-data\const1\const1-trial4-tdoa2_NN.csv';
-    '..\dataSet\flight-dataset\csv-data\const1\const1-trial5-tdoa2_NN.csv';
-    '..\dataSet\flight-dataset\csv-data\const1\const1-trial6-tdoa2_NN.csv'
+    'export-data-set\const1-trial1-tdoa2_NN.csv';
+    'export-data-set\const1-trial2-tdoa2_NN.csv';
+    'export-data-set\const1-trial3-tdoa2_NN.csv';
+    'export-data-set\const1-trial4-tdoa2_NN.csv';
+    'export-data-set\const1-trial5-tdoa2_NN.csv';
+    'export-data-set\const1-trial6-tdoa2_NN.csv'
 };
 
 % Initialize an empty table to hold all the data
@@ -113,18 +113,24 @@ YTest  = YTest(:);
 layers = [
     imageInputLayer([110 1 1],'Name','input','Normalization','none')  % Treat features as 1D image
 
-    convolution2dLayer([5 1], 32, 'Padding','same', 'Name','conv1')   % 5-feature filter
+    convolution2dLayer([10 1], 16, 'Padding','same', 'Name','conv1')   % 5-feature filter
     batchNormalizationLayer('Name','bn1')
     reluLayer('Name','relu1')
 
     maxPooling2dLayer([2 1], 'Stride',[2 1], 'Name','pool1')
 
-    convolution2dLayer([3 1], 64, 'Padding','same', 'Name','conv2')
+    convolution2dLayer([5 1], 32, 'Padding','same', 'Name','conv2')   % 5-feature filter
     batchNormalizationLayer('Name','bn2')
     reluLayer('Name','relu2')
 
+    maxPooling2dLayer([2 1], 'Stride',[2 1], 'Name','pool2')
+
+    convolution2dLayer([3 1], 64, 'Padding','same', 'Name','conv3')
+    batchNormalizationLayer('Name','bn3')
+    reluLayer('Name','relu3')
+
     fullyConnectedLayer(32, "Name", "fc1")
-    reluLayer("Name", "relu5")
+    reluLayer("Name", "relu4")
     
     fullyConnectedLayer(1, "Name", "output_fc")
     regressionLayer("Name", "regressionoutput")
@@ -133,7 +139,7 @@ layers = [
 %% === 4. Training Options ===
 options = trainingOptions("adam", ...
     "ExecutionEnvironment", "auto", ...      % uses GPU if available
-    "MaxEpochs", 300, ...
+    "MaxEpochs", 100, ...
     "MiniBatchSize", 1024, ...
     "InitialLearnRate", 1e-3, ...
     "ValidationData", {XValid4D, YValid}, ...
@@ -168,4 +174,4 @@ xlabel('Sample');
 ylabel('uwb\_tdoA\_now\_gt');
 
 %% === Save Results ===
-save('trained_tdoa_net_cnn_2.mat', 'net', 'muX', 'sigmaX', 'muY', 'sigmaY');
+save('networks\trained_tdoa_net_cnn_2.mat', 'net', 'muX', 'sigmaX', 'muY', 'sigmaY');
