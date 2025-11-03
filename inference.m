@@ -1,6 +1,6 @@
 %% load data and network
 data_extractor;
-load("networks\trained_tdoa_net_cnn_1.mat");
+load("networks\trained_tdoa_net_cnn_2.mat");
 %% extract and intgrate imu & uwb data 
 disp("extract and intgrate imu & uwb...");
 t = unique([t_imu; t_uwb_sim]);
