@@ -1,0 +1,322 @@
+%% load data and network
+data_extractor;
+load("trained_tdoa_net_cnn_2.mat");
+%% extract and intgrate imu & uwb data 
+disp("extract and intgrate imu & uwb...");
+t = unique([t_imu; t_uwb_sim]);
+K = length(t);
+
+% t 1 + acc 3 + gyro 3 + UWB 3 + UWB_sim 1
+integrated_dateset = nan(K, 11);
+
+integrated_dateset(:, 1) = t;
+
+fig1 = uifigure('Name','extract and intgrate imu & uwb...','Position',[500 400 400 120]);
+d1 = uiprogressdlg(fig1, ...
+    'Title','extract and intgrate imu & uwb', ...
+    'Message','Initializing...', ...
+    'Cancelable','on', ...
+    'Value',0);
+
+
+for k = 2:K
+
+    if mod(k, round(K/100)) == 0  % update every 1% of progress
+        d1.Value = k/K;
+        d1.Message = sprintf('Progress: %d%% completed', round(100*k/K));
+        drawnow limitrate;  % more efficient refresh
+    end
+
+    [imu_k, imu_check] = isin(t_imu, t(k-1));
+    [uwb_k, uwb_check] = isin(t_uwb_sim, t(k-1));
+    dt = t(k) - t(k-1);
+
+    if imu_check
+        integrated_dateset(k , 2:7) = imu(imu_k,:);
+        %%eskf.predict(imu(imu_k,:), dt, imu_check, k);
+    end
+
+    if uwb_check
+        integrated_dateset(k , 8:10) = uwb(uwb_k,:);
+        integrated_dateset(k , 11) = uwb_sim(uwb_k,3);
+        %%eskf.UWB_correct(uwb_sim(uwb_k,:), anchor_position, k);
+    end
+end
+%% simulation the trajectry
+disp("simulation the trajectry...");
+
+fig2 = uifigure('Name','simulation the trajectry...','Position',[500 400 400 120]);
+d2 = uiprogressdlg(fig2, ...
+    'Title','simulation the trajectry', ...
+    'Message','Initializing...', ...
+    'Cancelable','on', ...
+    'Value',0);
+
+sreach_next_sample_window_size = 100;
+
+max_num_of_epoch = size(uwb);
+max_num_of_epoch = max_num_of_epoch(1);
+number_of_interp = 17;
+interp_time = zeros([number_of_interp 1]);
+imu_epoch_samples_count = zeros([max_num_of_epoch 6]);
+dataset_epoch_data = zeros([number_of_interp+2 6]);
+
+uwb_enhanced = zeros([max_num_of_epoch 1]);
+
+uwb_enhanced(1:8) = uwb(1:8, 3);
+m = 9;
+for k = 2:K
+
+    if mod(k, round(K/100)) == 0  % update every 1% of progress
+        d2.Value = k/K;
+        d2.Message = sprintf('Progress: %d%% completed', round(100*k/K));
+        drawnow limitrate;  % more efficient refresh
+    end
+
+    if ~isnan(integrated_dateset(k, 8))
+        pair_of_tag_check = integrated_dateset(k, 8);
+        
+        if k+sreach_next_sample_window_size > K
+            sreach_next_sample = K;
+        else 
+            sreach_next_sample = k + sreach_next_sample_window_size;
+        end
+        for l = k+1:sreach_next_sample
+            if integrated_dateset(l, 8) == pair_of_tag_check
+                break;
+            end
+        end
+
+        sample_tdoa_time =  integrated_dateset(l, 1) - integrated_dateset(k, 1);
+        
+        % Check for rows without any NaN
+        validRows = ~isnan(integrated_dateset(k:l, 2));
+        % Count them
+        numValidRows = sum(validRows);
+        imu_epoch_samples_count(m) = numValidRows;
+        data = integrated_dateset(k:l, 1:7);
+        imu_epoch_samples = data(validRows, :);
+        interp_time_step_size = sample_tdoa_time/17;
+
+        for ii = 1:number_of_interp
+            interp_time(ii) = integrated_dateset(k, 1) + interp_time_step_size * ii;
+        end
+
+        if numValidRows < 2
+            imu_epoch_samples(2,:) = imu_epoch_samples(1,:);
+            imu_epoch_samples(2,1) = imu_epoch_samples(2,1) + 0.1;
+        end
+        imu_epoch_samples_interp = ...
+            interp1(imu_epoch_samples(:, 1), imu_epoch_samples(:, 2:7), ...
+            interp_time, 'linear', 'extrap');
+        %test data interpolation
+        %hold
+        %plot(imu_epoch_samples(:, 2))
+        %plot(imu_epoch_samples_interp(:, 1))
+        dataset_epoch_data(1:17, :) = imu_epoch_samples_interp;
+        dataset_epoch_data(18, 1:3) = ...
+            anchor_position(pair_of_tag_check+1, :);
+        if pair_of_tag_check == 7
+            dataset_epoch_data(18, 4:6) = ... 
+                anchor_position(1, :);
+        else 
+            dataset_epoch_data(18, 4:6) = ... 
+                anchor_position(pair_of_tag_check+2, :);
+        end
+        
+        dataset_epoch_data(19, 1) = integrated_dateset(k, 10);
+        dataset_epoch_data(19, 2) = integrated_dateset(l, 10);
+
+        X = dataset_epoch_data;
+        X = X';
+        X = X(:);
+        X = X(1:110);
+        X = (X - muX') ./ sigmaX';
+        % X = X';
+        X4D  = reshape(X,  [110, 1, 1, size(X, 2)]);
+
+        uwb_predict = predict(net, X4D);
+
+        % uwb_predict = uwb_predict' .* sigmaY + muY;
+        uwb_predict = uwb_predict * sigmaY + muY;
+        integrated_dateset(l, 10) = uwb_predict;
+        uwb_enhanced(m) = uwb_predict;
+        m = m + 1;
+        k = l;
+    end
+end
+
+%% calculate error 
+error_net = uwb_sim(:,3) - uwb_enhanced(1:max_num_of_epoch);
+error_raw = uwb_sim(:,3) - uwb(:,3);
+
+rms_raw = sqrt(mean((error_raw(:,1)).^2));
+rms_net = sqrt(mean((error_net(:,1)).^2));
+
+fprintf('The RMS error for uwb raw data is %.4f m\n', rms_raw);
+fprintf('The RMS error for uwb net data is %.4f m\n', rms_net);
+
+hold
+plot(error_raw)
+plot(error_net)
+
+%%
+uwb(:,3) = uwb_enhanced(1:max_num_of_epoch);
+%% Initialize ESKF with UWB data 
+disp("Initialize ESKF with UWB data...");
+t = unique([t_imu; t_uwb_sim]);
+K = length(t);
+X0 = zeros(6,1); X0(1) = 1.25; X0(2) = 0.0; X0(3) = 0.07;
+q0 = [1, 0, 0, 0]; % quaternion
+std_xy0 = 0.1; std_z0 = 0.1; std_vel0 = 0.1;
+std_rp0 = 0.1; std_yaw0 = 0.1;
+P0 = diag([std_xy0^2, std_xy0^2, std_z0^2, std_vel0^2, std_vel0^2, std_vel0^2, ...
+           std_rp0^2, std_rp0^2, std_yaw0^2]);
+eskf = ESKF(X0, q0, P0, K);
+fprintf('Timestep: %d\n', K);
+fprintf('Start state estimation\n');
+
+for k = 2:K
+    [imu_k, imu_check] = isin(t_imu, t(k-1));
+    [uwb_k, uwb_check] = isin(t_uwb, t(k-1));
+    dt = t(k) - t(k-1);
+    
+    eskf.predict(imu(imu_k,:), dt, imu_check, k);
+    if uwb_check
+        eskf.UWB_correct(uwb(uwb_k,:), anchor_position, k);
+    end
+end
+fprintf('Finish the state estimation\n');
+
+%% Interpolate Vicon for ground truth
+disp("Interpolate Vicon for ground truth...");
+x_interp = interp1(t_vicon, pos_vicon(:,1), t, 'spline');
+y_interp = interp1(t_vicon, pos_vicon(:,2), t, 'spline');
+z_interp = interp1(t_vicon, pos_vicon(:,3), t, 'spline');
+interp_gt = [x_interp(:), y_interp(:), z_interp(:)];
+
+position_k = eskf.Xpo(:, 1:3);  % Estimated position at time k
+velocity_k = eskf.Xpo(:, 4:6);  % Estimated velocity
+
+pos_error = position_k - interp_gt;
+rms_x = sqrt(mean((pos_error(:,1)).^2));
+rms_y = sqrt(mean((pos_error(:,2)).^2));
+rms_z = sqrt(mean((pos_error(:,3)).^2));
+RMS_all = sqrt(rms_x^2 + rms_y^2 + rms_z^2);
+
+fprintf('The RMS error for position x is %.4f m\n', rms_x);
+fprintf('The RMS error for position y is %.4f m\n', rms_y);
+fprintf('The RMS error for position z is %.4f m\n', rms_z);
+fprintf('The overall RMS error of position estimation is %.4f m\n', RMS_all);
+
+%% Plot results
+disp("Plot results...");
+plot_pos(t, eskf.Xpo, t_vicon, pos_vicon);
+plot_pos_err(t, pos_error, eskf.Ppo);
+plot_traj(pos_vicon, eskf.Xpo, anchor_position);
+%%
+function [index, found] = isin(t_np, t_k)
+    idx = find(t_np == t_k, 1);
+    if ~isempty(idx)
+        index = idx;
+        found = true;
+    else
+        index = 1;
+        found = false;
+    end
+end
+function plot_pos(t, Xpo, t_vicon, pos_vicon)
+    FONTSIZE = 18;
+
+    figure('Color','w','Position',[100 100 800 600]);
+    
+    subplot(3,1,1);
+    plot(t_vicon, pos_vicon(:,1), 'Color', [1 0.27 0], 'LineWidth', 2.5); hold on;
+    plot(t, Xpo(:,1), 'Color', [0.25 0.41 0.88], 'LineWidth', 2.5);
+    ylabel('X [m]', 'FontSize', FONTSIZE);
+    title('Estimation results', 'FontSize', FONTSIZE);
+    legend('Vicon ground truth', 'Estimate');
+    xlim([0 max(t)]);
+
+    subplot(3,1,2);
+    plot(t_vicon, pos_vicon(:,2), 'Color', [1 0.27 0], 'LineWidth', 2.5); hold on;
+    plot(t, Xpo(:,2), 'Color', [0.25 0.41 0.88], 'LineWidth', 2.5);
+    ylabel('Y [m]', 'FontSize', FONTSIZE);
+    xlim([0 max(t)]);
+
+    subplot(3,1,3);
+    plot(t_vicon, pos_vicon(:,3), 'Color', [1 0.27 0], 'LineWidth', 2.5); hold on;
+    plot(t, Xpo(:,3), 'Color', [0.25 0.41 0.88], 'LineWidth', 2.5);
+    xlabel('time [s]', 'FontSize', FONTSIZE);
+    ylabel('Z [m]', 'FontSize', FONTSIZE);
+    xlim([0 max(t)]);
+end
+
+function plot_pos_err(t, pos_error, Ppo)
+    FONTSIZE = 18;
+    if nargin < 3 || isempty(Ppo)
+        Ppo = zeros(0, 9, 9);
+    end
+
+    D = size(Ppo, 1);
+    delta_x = zeros(D,1);
+    delta_y = zeros(D,1);
+    delta_z = zeros(D,1);
+
+    for i = 1:D
+        delta_x(i) = sqrt(Ppo(i,1,1));
+        delta_y(i) = sqrt(Ppo(i,2,2));
+        delta_z(i) = sqrt(Ppo(i,3,3));
+    end
+
+    figure('Color','w','Position',[100 100 800 600]);
+
+    subplot(3,1,1);
+    title('Estimation Error', 'FontSize', FONTSIZE);
+    plot(t, pos_error(:,1), 'Color', [0.27 0.51 0.71], 'LineWidth', 2); hold on;
+    fill([t; flipud(t)], [3*delta_x; flipud(-3*delta_x)], ...
+         'c', 'FaceAlpha', 0.3, 'EdgeColor','none');
+    ylabel('error x [m]', 'FontSize', FONTSIZE);
+    xlim([0 max(t)]);
+    ylim([-0.35, 0.35]);
+
+    subplot(3,1,2);
+    plot(t, pos_error(:,2), 'Color', [0.27 0.51 0.71], 'LineWidth', 2); hold on;
+    fill([t; flipud(t)], [3*delta_y; flipud(-3*delta_y)], ...
+         'c', 'FaceAlpha', 0.3, 'EdgeColor','none');
+    ylabel('error y [m]', 'FontSize', FONTSIZE);
+    xlim([0 max(t)]);
+    ylim([-0.35, 0.35]);
+
+    subplot(3,1,3);
+    plot(t, pos_error(:,3), 'Color', [0.27 0.51 0.71], 'LineWidth', 2); hold on;
+    fill([t; flipud(t)], [3*delta_z; flipud(-3*delta_z)], ...
+         'c', 'FaceAlpha', 0.3, 'EdgeColor','none');
+    xlabel('time [s]', 'FontSize', FONTSIZE);
+    ylabel('error z [m]', 'FontSize', FONTSIZE);
+    xlim([0 max(t)]);
+    ylim([-0.45, 0.45]);
+end
+
+function plot_traj(pos_vicon, Xpo, anchor_pos)
+    FONTSIZE = 18;
+    figure('Color','w','Position',[100 100 800 600]);
+    %ax = axes('Projection','3d');
+
+    hold on;
+    plot3(pos_vicon(:,1), pos_vicon(:,2), pos_vicon(:,3), 'b', 'LineWidth', 2);
+    plot3(Xpo(:,1), Xpo(:,2), Xpo(:,3), 'g', 'LineWidth', 3);
+    scatter3(anchor_pos(:,1), anchor_pos(:,2), anchor_pos(:,3), ...
+             100, 'filled', 'MarkerFaceColor', [0 0.5 0.5], 'MarkerEdgeAlpha',0.5);
+
+    xlim([-3.5, 3.5]);
+    ylim([-3.9, 3.9]);
+    zlim([0, 3.0]);
+    xlabel('X [m]', 'FontSize', FONTSIZE);
+    ylabel('Y [m]', 'FontSize', FONTSIZE);
+    zlabel('Z [m]', 'FontSize', FONTSIZE);
+    legend('ground truth', 'estimation', 'anchors', 'FontSize', FONTSIZE, 'Location', 'best');
+
+    view(24, -58);
+    daspect([1 1 0.5]);
+end
