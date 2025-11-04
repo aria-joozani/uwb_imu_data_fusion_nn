@@ -187,52 +187,83 @@ YTest  = YTest(:);
 
 %% clear unused data
 
-clear currentTable data_set 
+clear currentTable data_set firstTable info X Y
 
 %% === 3. Define Light CNN Architecture ===
-layers = [
-    imageInputLayer([110 1 1],'Name','input','Normalization','none')  % 1D feature input
+% layers = [
+%     imageInputLayer([110 1 1],'Name','input','Normalization','none')  % 1D feature input
+% 
+%     convolution2dLayer([10 1], 16, 'Padding','same', 'Name','conv1')
+%     batchNormalizationLayer('Name','bn1')
+%     reluLayer('Name','relu1')
+%     maxPooling2dLayer([2 1], 'Stride',[2 1], 'Name','pool1')
+% 
+%     convolution2dLayer([5 1], 32, 'Padding','same', 'Name','conv2')
+%     batchNormalizationLayer('Name','bn2')
+%     reluLayer('Name','relu2')
+%     maxPooling2dLayer([2 1], 'Stride',[2 1], 'Name','pool2')
+% 
+%     convolution2dLayer([3 1], 64, 'Padding','same', 'Name','conv3')
+%     batchNormalizationLayer('Name','bn3')
+%     reluLayer('Name','relu3')
+% 
+%     dropoutLayer(0.5, 'Name', 'drop1')  % Helps prevent overfitting
+% 
+%     fullyConnectedLayer(32, "Name", "fc1")
+%     reluLayer("Name", "relu4")
+% 
+%     fullyConnectedLayer(1, "Name", "output_fc")
+%     regressionLayer("Name", "regressionoutput")
+% ];
 
-    convolution2dLayer([10 1], 16, 'Padding','same', 'Name','conv1')
+layers = [
+    imageInputLayer([110 1 1],'Name','input','Normalization','none')  % Treat features as 1D image
+
+    convolution2dLayer([20 1], 8, 'Padding','same', 'Name','conv1')   % 5-feature filter
     batchNormalizationLayer('Name','bn1')
     reluLayer('Name','relu1')
-    maxPooling2dLayer([2 1], 'Stride',[2 1], 'Name','pool1')
 
-    convolution2dLayer([5 1], 32, 'Padding','same', 'Name','conv2')
+    maxPooling2dLayer([15 1], 'Stride',[2 1], 'Name','pool1')
+
+    convolution2dLayer([10 1], 16, 'Padding','same', 'Name','conv2')   % 5-feature filter
     batchNormalizationLayer('Name','bn2')
     reluLayer('Name','relu2')
-    maxPooling2dLayer([2 1], 'Stride',[2 1], 'Name','pool2')
 
-    convolution2dLayer([3 1], 64, 'Padding','same', 'Name','conv3')
+    maxPooling2dLayer([7 1], 'Stride',[2 1], 'Name','pool2')
+
+    convolution2dLayer([5 1], 32, 'Padding','same', 'Name','conv3')   % 5-feature filter
     batchNormalizationLayer('Name','bn3')
     reluLayer('Name','relu3')
 
-    dropoutLayer(0.5, 'Name', 'drop1')  % Helps prevent overfitting
+    maxPooling2dLayer([2 1], 'Stride',[2 1], 'Name','pool3')
+
+    convolution2dLayer([3 1], 64, 'Padding','same', 'Name','conv4')
+    batchNormalizationLayer('Name','bn4')
+    reluLayer('Name','relu4')
 
     fullyConnectedLayer(32, "Name", "fc1")
-    reluLayer("Name", "relu4")
-
+    reluLayer("Name", "relu5")
+    
     fullyConnectedLayer(1, "Name", "output_fc")
     regressionLayer("Name", "regressionoutput")
 ];
 
-
 %% === 4. Training Options ===
 options = trainingOptions('adam', ...
     'MaxEpochs', 50, ...
-    'MiniBatchSize', 256, ...
-    'InitialLearnRate', 1e-3, ...
+    'MiniBatchSize', 2048, ...
+    'InitialLearnRate', 1e-4, ...
     'LearnRateSchedule','piecewise', ...
     'LearnRateDropFactor',0.5, ...
     'LearnRateDropPeriod',10, ...
     'ValidationData', {XValid4D, YValid}, ...
     'ValidationFrequency', 100, ...
-    'ValidationPatience', 10, ...
+    'ValidationPatience', 20, ...
     'Shuffle', 'every-epoch', ...
     'Plots', 'training-progress', ...
     'Verbose', true, ...
     'ExecutionEnvironment', 'auto', ...
-    'L2Regularization', 0.0001);
+    'L2Regularization', 0.001);
 
 
 %% === 5. Train the Network ===
@@ -262,4 +293,4 @@ xlabel('Sample');
 ylabel('uwb\_tdoA\_now\_gt');
 
 %% === Save Results ===
-save('networks\trained_tdoa_net_cnn_2.mat', 'net', 'muX', 'sigmaX', 'muY', 'sigmaY');
+save('networks\trained_tdoa_net_cnn_3.mat', 'net', 'muX', 'sigmaX', 'muY', 'sigmaY');
