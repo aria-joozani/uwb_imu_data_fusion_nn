@@ -3,7 +3,7 @@ clc; close all; clear all;
 csv_file = 'csv-data\const1\const1-trial1-tdoa2.csv';
 anchors = 'survey-results\anchor_const1_survey.txt';
 data_extractor;
-load("networks\trained_tdoa_net_cnn_3.mat");
+load("networks\trained_tdoa_net_cnn_5.mat");
 %% extract and intgrate imu & uwb data 
 disp("extract and intgrate imu & uwb...");
 t = unique([t_imu; t_uwb_sim]);
