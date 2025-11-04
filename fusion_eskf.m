@@ -1,3 +1,6 @@
+clc; close all; clear all;
+csv_file = 'csv-data\const1\const1-trial1-tdoa2.csv';
+anchors = 'survey-results\anchor_const1_survey.txt';
 data_extractor;
 %% Initialize ESKF with UWB data 
 disp("Initialize ESKF with UWB data...");

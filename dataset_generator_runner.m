@@ -1,0 +1,145 @@
+csv_file_lits = {
+    'csv-data\const1\const1-trial1-tdoa2.csv'
+    'csv-data\const1\const1-trial2-tdoa2.csv'
+    'csv-data\const1\const1-trial3-tdoa2.csv'
+    'csv-data\const1\const1-trial4-tdoa2.csv'
+    'csv-data\const1\const1-trial5-tdoa2.csv'
+    'csv-data\const1\const1-trial6-tdoa2.csv'
+    'csv-data\const2\const2-trial1-tdoa2.csv'
+    'csv-data\const2\const2-trial2-tdoa2.csv'
+    'csv-data\const2\const2-trial3-tdoa2.csv'
+    'csv-data\const2\const2-trial4-tdoa2.csv'
+    'csv-data\const2\const2-trial5-tdoa2.csv'
+    'csv-data\const2\const2-trial6-tdoa2.csv'
+    'csv-data\const3\const3-trial1-tdoa2.csv'
+    'csv-data\const3\const3-trial2-tdoa2.csv'
+    'csv-data\const3\const3-trial3-tdoa2.csv'
+    'csv-data\const3\const3-trial4-tdoa2.csv'
+    'csv-data\const3\const3-trial5-tdoa2.csv'
+    'csv-data\const3\const3-trial6-tdoa2.csv'
+    'csv-data\const3\const3-trial7-tdoa2-manual1.csv'
+    'csv-data\const3\const3-trial7-tdoa2-manual2.csv'
+    'csv-data\const4\const4-trial1-tdoa2-traj1.csv'
+    'csv-data\const4\const4-trial1-tdoa2-traj1.csv'
+    'csv-data\const4\const4-trial1-tdoa2-traj1.csv'
+    'csv-data\const4\const4-trial1-tdoa2-traj1.csv'
+    'csv-data\const4\const4-trial1-tdoa2-traj1.csv'
+    'csv-data\const4\const4-trial1-tdoa2-traj1.csv'
+    'csv-data\const4\const4-trial1-tdoa2-traj2.csv'
+    'csv-data\const4\const4-trial1-tdoa2-traj3.csv'
+    'csv-data\const4\const4-trial2-tdoa2-traj1.csv'
+    'csv-data\const4\const4-trial2-tdoa2-traj2.csv'
+    'csv-data\const4\const4-trial2-tdoa2-traj3.csv'
+    'csv-data\const4\const4-trial3-tdoa2-traj1.csv'
+    'csv-data\const4\const4-trial3-tdoa2-traj2.csv'
+    'csv-data\const4\const4-trial3-tdoa2-traj3.csv'
+    'csv-data\const4\const4-trial4-tdoa2-traj1.csv'
+    'csv-data\const4\const4-trial4-tdoa2-traj2.csv'
+    'csv-data\const4\const4-trial4-tdoa2-traj3.csv'
+    'csv-data\const4\const4-trial6-tdoa2-traj1.csv'
+    'csv-data\const4\const4-trial6-tdoa2-traj2.csv'
+    'csv-data\const4\const4-trial6-tdoa2-traj3.csv'
+    'csv-data\const4\const4-trial7-tdoa2-manual1.csv'
+    'csv-data\const4\const4-trial7-tdoa2-manual2.csv'
+    'csv-data\const4\const4-trial7-tdoa2-manual3.csv'
+};
+
+anchors_list = {
+    'survey-results\anchor_const1_survey.txt';
+    'survey-results\anchor_const1_survey.txt';
+    'survey-results\anchor_const1_survey.txt';
+    'survey-results\anchor_const1_survey.txt';
+    'survey-results\anchor_const1_survey.txt';
+    'survey-results\anchor_const1_survey.txt';
+    'survey-results\anchor_const2_survey.txt';
+    'survey-results\anchor_const2_survey.txt';
+    'survey-results\anchor_const2_survey.txt';
+    'survey-results\anchor_const2_survey.txt';
+    'survey-results\anchor_const2_survey.txt';
+    'survey-results\anchor_const2_survey.txt';
+    'survey-results\anchor_const3_survey.txt';
+    'survey-results\anchor_const3_survey.txt';
+    'survey-results\anchor_const3_survey.txt';
+    'survey-results\anchor_const3_survey.txt';
+    'survey-results\anchor_const3_survey.txt';
+    'survey-results\anchor_const3_survey.txt';
+    'survey-results\anchor_const3_survey.txt';
+    'survey-results\anchor_const3_survey.txt';
+    'survey-results\anchor_const4_survey.txt';
+    'survey-results\anchor_const4_survey.txt';
+    'survey-results\anchor_const4_survey.txt';
+    'survey-results\anchor_const4_survey.txt';
+    'survey-results\anchor_const4_survey.txt';
+    'survey-results\anchor_const4_survey.txt';
+    'survey-results\anchor_const4_survey.txt';
+    'survey-results\anchor_const4_survey.txt';
+    'survey-results\anchor_const4_survey.txt';
+    'survey-results\anchor_const4_survey.txt';
+    'survey-results\anchor_const4_survey.txt';
+    'survey-results\anchor_const4_survey.txt';
+    'survey-results\anchor_const4_survey.txt';
+    'survey-results\anchor_const4_survey.txt';
+    'survey-results\anchor_const4_survey.txt';
+    'survey-results\anchor_const4_survey.txt';
+    'survey-results\anchor_const4_survey.txt';
+    'survey-results\anchor_const4_survey.txt';
+    'survey-results\anchor_const4_survey.txt';
+    'survey-results\anchor_const4_survey.txt';
+    'survey-results\anchor_const4_survey.txt';
+    'survey-results\anchor_const4_survey.txt';
+    'survey-results\anchor_const4_survey.txt';
+};
+
+export_csv_file_list = {
+    'export-data-set\const1-trial1-tdoa2_NN.csv';
+    'export-data-set\const1-trial2-tdoa2_NN.csv';
+    'export-data-set\const1-trial3-tdoa2_NN.csv';
+    'export-data-set\const1-trial4-tdoa2_NN.csv';
+    'export-data-set\const1-trial5-tdoa2_NN.csv';
+    'export-data-set\const1-trial6-tdoa2_NN.csv';
+    'export-data-set\const2-trial1-tdoa2_NN.csv';
+    'export-data-set\const2-trial2-tdoa2_NN.csv';
+    'export-data-set\const2-trial3-tdoa2_NN.csv';
+    'export-data-set\const2-trial4-tdoa2_NN.csv';
+    'export-data-set\const2-trial5-tdoa2_NN.csv';
+    'export-data-set\const2-trial6-tdoa2_NN.csv';
+    'export-data-set\const3-trial1-tdoa2_NN.csv';
+    'export-data-set\const3-trial2-tdoa2_NN.csv';
+    'export-data-set\const3-trial3-tdoa2_NN.csv';
+    'export-data-set\const3-trial4-tdoa2_NN.csv';
+    'export-data-set\const3-trial5-tdoa2_NN.csv';
+    'export-data-set\const3-trial6-tdoa2_NN.csv';
+    'export-data-set\const3-trial7-tdoa2-manual1_NN.csv';
+    'export-data-set\const3-trial7-tdoa2-manual2_NN.csv';
+    'export-data-set\const4-trial1-tdoa2-traj1_NN.csv';
+    'export-data-set\const4-trial1-tdoa2-traj1_NN.csv';
+    'export-data-set\const4-trial1-tdoa2-traj1_NN.csv';
+    'export-data-set\const4-trial1-tdoa2-traj1_NN.csv';
+    'export-data-set\const4-trial1-tdoa2-traj1_NN.csv';
+    'export-data-set\const4-trial1-tdoa2-traj1_NN.csv';
+    'export-data-set\const4-trial1-tdoa2-traj2_NN.csv';
+    'export-data-set\const4-trial1-tdoa2-traj3_NN.csv';
+    'export-data-set\const4-trial2-tdoa2-traj1_NN.csv';
+    'export-data-set\const4-trial2-tdoa2-traj2_NN.csv';
+    'export-data-set\const4-trial2-tdoa2-traj3_NN.csv';
+    'export-data-set\const4-trial3-tdoa2-traj1_NN.csv';
+    'export-data-set\const4-trial3-tdoa2-traj2_NN.csv';
+    'export-data-set\const4-trial3-tdoa2-traj3_NN.csv';
+    'export-data-set\const4-trial4-tdoa2-traj1_NN.csv';
+    'export-data-set\const4-trial4-tdoa2-traj2_NN.csv';
+    'export-data-set\const4-trial4-tdoa2-traj3_NN.csv';
+    'export-data-set\const4-trial6-tdoa2-traj1_NN.csv';
+    'export-data-set\const4-trial6-tdoa2-traj2_NN.csv';
+    'export-data-set\const4-trial6-tdoa2-traj3_NN.csv';
+    'export-data-set\const4-trial7-tdoa2-manual1_NN.csv';
+    'export-data-set\const4-trial7-tdoa2-manual2_NN.csv';
+    'export-data-set\const4-trial7-tdoa2-manual3_NN.csv';
+};
+
+for i = 17:length(csv_file_lits)
+    csv_file = csv_file_lits{i};
+    anchors = anchors_list{i};
+    export_csv_file = export_csv_file_list{i};
+    data_extractor;
+    dataset_generator;
+end

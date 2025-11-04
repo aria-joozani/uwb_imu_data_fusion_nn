@@ -1,13 +1,7 @@
 %% add functions path and dataset file path
-clc; close all; clear all;
-
-addpath('library')
+addpath('library');
 
 disp("📥 Starting dataset load and synchronization...");
-
-csv_file = 'csv-data\const1\const1-trial1-tdoa2.csv';
-anchors = 'survey-results\anchor_const1_survey.txt';
-
 %% === Load anchor positions and quaternions from file ===
 disp("📥 Load anchor positions and quaternions from file...");
 lines = splitlines(fileread(anchors)); % or replace with actual text content

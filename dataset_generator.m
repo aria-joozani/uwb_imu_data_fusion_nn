@@ -3,7 +3,7 @@ data_extractor;
 %% generate dataset
 disp("generate dataset...");
 
-export_csv_file = 'export-data-set\const1-trial6-tdoa2_NN.csv';
+
 %% Initialize ESKF with UWB data 
 disp("Write imu and uwb in integrated table...");
 
@@ -100,7 +100,12 @@ for k = 2:K
         for ii = 1:number_of_interp
             interp_time(ii) = dataset_export(k, 1) + interp_time_step_size * ii;
         end
-
+        
+        size_imu_epoch_samples = size(imu_epoch_samples);
+        if(size_imu_epoch_samples(1) == 0)
+            continue;
+        end
+        
         if numValidRows < 2
             imu_epoch_samples(2,:) = imu_epoch_samples(1,:);
             imu_epoch_samples(2,1) = imu_epoch_samples(2,1) + 0.1;

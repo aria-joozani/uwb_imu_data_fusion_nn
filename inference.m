@@ -1,6 +1,9 @@
 %% load data and network
+clc; close all; clear all;
+csv_file = 'csv-data\const1\const1-trial1-tdoa2.csv';
+anchors = 'survey-results\anchor_const1_survey.txt';
 data_extractor;
-load("networks\trained_tdoa_net_cnn_2.mat");
+load("networks\trained_tdoa_net_cnn_3.mat");
 %% extract and intgrate imu & uwb data 
 disp("extract and intgrate imu & uwb...");
 t = unique([t_imu; t_uwb_sim]);
@@ -139,7 +142,7 @@ for k = 2:K
 
         % uwb_predict = uwb_predict' .* sigmaY + muY;
         uwb_predict = uwb_predict * sigmaY + muY;
-        integrated_dateset(l, 10) = uwb_predict;
+        % integrated_dateset(l, 10) = uwb_predict;
         uwb_enhanced(m) = uwb_predict;
         m = m + 1;
         k = l;
@@ -167,7 +170,7 @@ disp("Initialize ESKF with UWB data...");
 
 fig3 = uifigure('Name','fusion data...','Position',[500 400 400 120]);
 d3 = uiprogressdlg(fig3, ...
-    'Title','simulation the trajectry', ...
+    'Title','fusion data', ...
     'Message','Initializing...', ...
     'Cancelable','on', ...
     'Value',0);
