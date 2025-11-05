@@ -1,9 +1,9 @@
 %% load data and network
 clc; close all; clear all;
-csv_file = 'csv-data\const4\const4-trial3-tdoa2-traj1.csv';
-anchors = 'survey-results\anchor_const4_survey.txt';
+csv_file = 'csv-data\const1\const1-trial1-tdoa2.csv';
+anchors = 'survey-results\anchor_const1_survey.txt';
 data_extractor;
-load("networks\trained_tdoa_net_cnn_5.mat");
+load("networks\trained_tdoa_net_lstm.mat");
 %% extract and intgrate imu & uwb data 
 disp("extract and intgrate imu & uwb...");
 t = unique([t_imu; t_uwb_sim]);
@@ -45,37 +45,32 @@ for k = 2:K
         %%eskf.UWB_correct(uwb_sim(uwb_k,:), anchor_position, k);
     end
 end
-%% simulation the trajectry
-disp("simulation the trajectry...");
+%% create epoch base data for each TDOA 
+disp("create epoch base data for each TDOA...");
 
-fig2 = uifigure('Name','simulation the trajectry...','Position',[500 400 400 120]);
+fig2 = uifigure('Name','create epoch base data for each TDOA...','Position',[500 400 400 120]);
 d2 = uiprogressdlg(fig2, ...
-    'Title','simulation the trajectry', ...
+    'Title','create epoch base data for each TDOA', ...
     'Message','Initializing...', ...
     'Cancelable','on', ...
     'Value',0);
 
 sreach_next_sample_window_size = 100;
-
+m = 1;
 max_num_of_epoch = size(uwb);
 max_num_of_epoch = max_num_of_epoch(1);
 number_of_interp = 17;
+sample_tdoa_time = zeros([max_num_of_epoch 1]);
+sample_tdoa_space = zeros([max_num_of_epoch 1]);
 interp_time = zeros([number_of_interp 1]);
 imu_epoch_samples_count = zeros([max_num_of_epoch 6]);
-dataset_epoch_data = zeros([number_of_interp+2 6]);
-
-uwb_enhanced = zeros([max_num_of_epoch 1]);
-
-% uwb_enhanced(1:8) = uwb(1:8, 3);
-m = 1;
+dataset_epoch_data = zeros([number_of_interp+2 6 max_num_of_epoch]);
 for k = 2:K
-
     if mod(k, round(K/100)) == 0  % update every 1% of progress
         d2.Value = k/K;
         d2.Message = sprintf('Progress: %d%% completed', round(100*k/K));
         drawnow limitrate;  % more efficient refresh
     end
-
     if ~isnan(integrated_dateset(k, 8))
         pair_of_tag_check = integrated_dateset(k, 8);
         
@@ -89,8 +84,11 @@ for k = 2:K
                 break;
             end
         end
-
-        sample_tdoa_time =  integrated_dateset(l, 1) - integrated_dateset(k, 1);
+        if(size(l) ~= size(k))
+            continue;
+        end
+        sample_tdoa_space(m) = l - k;
+        sample_tdoa_time(m) =  integrated_dateset(l, 1) - integrated_dateset(k, 1);
         
         % Check for rows without any NaN
         validRows = ~isnan(integrated_dateset(k:l, 2));
@@ -99,12 +97,17 @@ for k = 2:K
         imu_epoch_samples_count(m) = numValidRows;
         data = integrated_dateset(k:l, 1:7);
         imu_epoch_samples = data(validRows, :);
-        interp_time_step_size = sample_tdoa_time/17;
+        interp_time_step_size = sample_tdoa_time(m)/17;
 
         for ii = 1:number_of_interp
             interp_time(ii) = integrated_dateset(k, 1) + interp_time_step_size * ii;
         end
-
+        
+        size_imu_epoch_samples = size(imu_epoch_samples);
+        if(size_imu_epoch_samples(1) == 0)
+            continue;
+        end
+        
         if numValidRows < 2
             imu_epoch_samples(2,:) = imu_epoch_samples(1,:);
             imu_epoch_samples(2,1) = imu_epoch_samples(2,1) + 0.1;
@@ -116,41 +119,39 @@ for k = 2:K
         %hold
         %plot(imu_epoch_samples(:, 2))
         %plot(imu_epoch_samples_interp(:, 1))
-        dataset_epoch_data(1:17, :) = imu_epoch_samples_interp;
-        dataset_epoch_data(18, 1:3) = ...
+        dataset_epoch_data(1:17, :, m) = imu_epoch_samples_interp;
+        dataset_epoch_data(18, 1:3, m) = ...
             anchor_position(pair_of_tag_check+1, :);
         if pair_of_tag_check == 7
-            dataset_epoch_data(18, 4:6) = ... 
+            dataset_epoch_data(18, 4:6, m) = ... 
                 anchor_position(1, :);
         else 
-            dataset_epoch_data(18, 4:6) = ... 
+            dataset_epoch_data(18, 4:6, m) = ... 
                 anchor_position(pair_of_tag_check+2, :);
         end
-        
-        dataset_epoch_data(19, 1) = integrated_dateset(k, 10);
-        dataset_epoch_data(19, 2) = integrated_dateset(l, 10);
 
-        X = dataset_epoch_data;
-        X = X';
-        X = X(:);
-        X = X(1:110);
-        X = (X - muX') ./ sigmaX';
-        % X = X';
-        X4D  = reshape(X,  [110, 1, 1, size(X, 2)]);
-
-        uwb_predict = predict(net, X4D);
-
-        % uwb_predict = uwb_predict' .* sigmaY + muY;
-        uwb_predict = uwb_predict * sigmaY + muY;
-        if k % 300 ~= 0
-            integrated_dateset(l, 10) = uwb_predict;
-        end        
-        uwb_enhanced(m) = uwb_predict;
+        dataset_epoch_data(19, 1, m) = integrated_dateset(k, 10);
+        dataset_epoch_data(19, 2, m) = integrated_dateset(l, 10);
+        % dataset_epoch_data(19, 3, m) = integrated_dateset(l, 11);
         m = m + 1;
         k = l;
     end
 end
 
+%%
+X = reshape(permute(dataset_epoch_data, [3 2 1]), max_num_of_epoch, 19*6);
+X = X(:,1:110);
+
+% Reshape X into sequences: [features × timeSteps × observations]
+% Assuming each row is a time step and you want to create sequences of fixed length
+sequenceLength = 20;  % You can adjust this
+numSamples = floor(size(X,1) / sequenceLength);
+
+X = reshape(X(1:numSamples*sequenceLength, :)', size(X,2), sequenceLength, []);
+N = size(X, 3);
+Xsimulation = squeeze(num2cell(X(:, :, 1:N), [1 2]))';
+
+Ysimulation = predict(net, Xsimulation);
 %% calculate error 
 error_net = uwb_sim(:,3) - uwb_enhanced(1:max_num_of_epoch);
 error_raw = uwb_sim(:,3) - uwb(:,3);

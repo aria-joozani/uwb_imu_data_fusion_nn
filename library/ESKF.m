@@ -44,7 +44,7 @@ classdef ESKF < handle
         function predict(obj, imu, dt, imu_check, k)
             % Process noise
             w_accxyz = 2;
-            w_gyro_rpy = 2;   % rad/sec
+            w_gyro_rpy = 0.1;   % rad/sec
             % Constants
             GRAVITY_MAGNITUDE = 9.81;
             e3 = [0; 0; 1];

@@ -1,6 +1,6 @@
 clc; close all; clear all;
-csv_file = 'csv-data\const1\const1-trial1-tdoa2.csv';
-anchors = 'survey-results\anchor_const1_survey.txt';
+csv_file = 'csv-data\const4\const4-trial3-tdoa2-traj1.csv';
+anchors = 'survey-results\anchor_const4_survey.txt';
 data_extractor;
 %% Initialize ESKF with UWB data 
 disp("Initialize ESKF with UWB data...");
@@ -36,7 +36,7 @@ for k = 2:K
     
     eskf.predict(imu(imu_k,:), dt, imu_check, k);
     if uwb_check
-        eskf.UWB_correct(uwb_sim(uwb_k,:), anchor_position, k);
+        eskf.UWB_correct(uwb(uwb_k,:), anchor_position, k);
     end
 end
 fprintf('Finish the state estimation\n');

@@ -133,7 +133,7 @@ inputNames = { ...
 
 outputName = 'uwb_tdoA_now_gt';
 
-%% Load and prepare data
+%% Load and prepare data for LSTM
 X = table2array(data_set(:, inputNames));
 Y = table2array(data_set(:, outputName));
 
@@ -146,10 +146,17 @@ Y = Y(validMask);
 [X, muX, sigmaX] = zscore(X);
 [Y, muY, sigmaY] = zscore(Y);
 
-%% === 2. Split Dataset ===
-N = size(X,1);
-idx = randperm(N);
-% idx = 1:N;
+% Reshape X into sequences: [features × timeSteps × observations]
+% Assuming each row is a time step and you want to create sequences of fixed length
+sequenceLength = 20;  % You can adjust this
+numSamples = floor(size(X,1) / sequenceLength);
+
+X = reshape(X(1:numSamples*sequenceLength, :)', size(X,2), sequenceLength, []);
+Y = reshape(Y(1:numSamples*sequenceLength), sequenceLength, []);
+Y = squeeze(mean(Y, 1));  % One target per sequence
+
+%% === 2. Split Dataset for LSTM ===
+N = size(X, 3);  % Number of sequences
 trainRatio = 0.7;
 valRatio   = 0.15;
 
@@ -157,93 +164,35 @@ Ntrain = floor(trainRatio * N);
 Nval   = floor(valRatio * N);
 Ntest  = N - Ntrain - Nval;
 
-XTrain = X(idx(1:Ntrain), :);
-YTrain = Y(idx(1:Ntrain), :);
-XValid = X(idx(Ntrain+1:Ntrain+Nval), :);
-YValid = Y(idx(Ntrain+1:Ntrain+Nval), :);
-XTest  = X(idx(Ntrain+Nval+1:end), :);
-YTest  = Y(idx(Ntrain+Nval+1:end), :);
+% Preserve sequence order — no shuffling
+XTrain = squeeze(num2cell(X(:, :, 1:Ntrain), [1 2]))';
+YTrain = Y(1:Ntrain);
 
-% Make sure counts match
-assert(size(XTrain,1) == size(YTrain,1), 'Train size mismatch');
-assert(size(XValid,1) == size(YValid,1), 'Validation size mismatch');
-assert(size(XTest,1)  == size(YTest,1),  'Test size mismatch');
+XValid = squeeze(num2cell(X(:, :, Ntrain+1:Ntrain+Nval), [1 2]))';
+YValid = Y(Ntrain+1:Ntrain+Nval);
 
-% X: N×110 (samples × features)
-XTrain = XTrain';   % Now 110×Ntrain
-YTrain = YTrain';   % 1×Ntrain
-XValid = XValid';   % 110×Nvalid
-YValid = YValid';   % 1×Nvalid
-XTest  = XTest';    % 110×Ntest
-YTest  = YTest';    % 1×Ntest
+XTest  = squeeze(num2cell(X(:, :, Ntrain+Nval+1:end), [1 2]))';
+YTest  = Y(Ntrain+Nval+1:end);
 
-XTrain4D = reshape(XTrain, [110, 1, 1, size(XTrain, 2)]);
-XValid4D = reshape(XValid, [110, 1, 1, size(XValid, 2)]);
-XTest4D  = reshape(XTest,  [110, 1, 1, size(XTest, 2)]);
-
-YTrain = YTrain(:);  % Ensure column vector
+% Ensure column vectors for targets
+YTrain = YTrain(:);
 YValid = YValid(:);
 YTest  = YTest(:);
 
-%% clear unused data
-
+%% === 6. Clear Unused Data ===
 clear currentTable data_set firstTable info X Y
 
-%% === 3. Define Light CNN Architecture ===
-% layers = [
-%     imageInputLayer([110 1 1],'Name','input','Normalization','none')  % 1D feature input
-% 
-%     convolution2dLayer([10 1], 16, 'Padding','same', 'Name','conv1')
-%     batchNormalizationLayer('Name','bn1')
-%     reluLayer('Name','relu1')
-%     maxPooling2dLayer([2 1], 'Stride',[2 1], 'Name','pool1')
-% 
-%     convolution2dLayer([5 1], 32, 'Padding','same', 'Name','conv2')
-%     batchNormalizationLayer('Name','bn2')
-%     reluLayer('Name','relu2')
-%     maxPooling2dLayer([2 1], 'Stride',[2 1], 'Name','pool2')
-% 
-%     convolution2dLayer([3 1], 64, 'Padding','same', 'Name','conv3')
-%     batchNormalizationLayer('Name','bn3')
-%     reluLayer('Name','relu3')
-% 
-%     dropoutLayer(0.5, 'Name', 'drop1')  % Helps prevent overfitting
-% 
-%     fullyConnectedLayer(32, "Name", "fc1")
-%     reluLayer("Name", "relu4")
-% 
-%     fullyConnectedLayer(1, "Name", "output_fc")
-%     regressionLayer("Name", "regressionoutput")
-% ];
-
+%% === 3. Define Light LSTM Architecture ===
 layers = [
-    imageInputLayer([110 1 1],'Name','input','Normalization','none')  % Treat features as 1D image
+    sequenceInputLayer(110, "Name", "input")  % 110 features per time step
 
-    convolution2dLayer([20 1], 8, 'Padding','same', 'Name','conv1')   % 5-feature filter
-    batchNormalizationLayer('Name','bn1')
-    reluLayer('Name','relu1')
+    lstmLayer(100, "OutputMode", "last", "Name", "lstm1")  % 100 hidden units
+    fullyConnectedLayer(64, "Name", "fc1")
+    reluLayer("Name", "relu1")
 
-    maxPooling2dLayer([15 1], 'Stride',[2 1], 'Name','pool1')
+    fullyConnectedLayer(32, "Name", "fc2")
+    reluLayer("Name", "relu2")
 
-    convolution2dLayer([10 1], 16, 'Padding','same', 'Name','conv2')   % 5-feature filter
-    batchNormalizationLayer('Name','bn2')
-    reluLayer('Name','relu2')
-
-    maxPooling2dLayer([7 1], 'Stride',[2 1], 'Name','pool2')
-
-    convolution2dLayer([5 1], 32, 'Padding','same', 'Name','conv3')   % 5-feature filter
-    batchNormalizationLayer('Name','bn3')
-    reluLayer('Name','relu3')
-
-    maxPooling2dLayer([2 1], 'Stride',[2 1], 'Name','pool3')
-
-    convolution2dLayer([3 1], 64, 'Padding','same', 'Name','conv4')
-    batchNormalizationLayer('Name','bn4')
-    reluLayer('Name','relu4')
-
-    fullyConnectedLayer(32, "Name", "fc1")
-    reluLayer("Name", "relu5")
-    
     fullyConnectedLayer(1, "Name", "output_fc")
     regressionLayer("Name", "regressionoutput")
 ];
@@ -251,46 +200,44 @@ layers = [
 %% === 4. Training Options ===
 options = trainingOptions('adam', ...
     'MaxEpochs', 50, ...
-    'MiniBatchSize', 2048, ...
-    'InitialLearnRate', 1e-4, ...
-    'LearnRateSchedule','piecewise', ...
-    'LearnRateDropFactor',0.5, ...
-    'LearnRateDropPeriod',10, ...
-    'ValidationData', {XValid4D, YValid}, ...
-    'ValidationFrequency', 100, ...
-    'ValidationPatience', 20, ...
-    'Shuffle', 'every-epoch', ...
+    'MiniBatchSize', 128, ...  % Smaller batch size for sequence data
+    'InitialLearnRate', 1e-3, ...
+    'LearnRateSchedule', 'piecewise', ...
+    'LearnRateDropFactor', 0.5, ...
+    'LearnRateDropPeriod', 10, ...
+    'ValidationData', {XValid, YValid}, ...
+    'ValidationFrequency', 30, ...
+    'ValidationPatience', 10, ...
+    'Shuffle', 'never', ...  % Preserve sequence order
     'Plots', 'training-progress', ...
     'Verbose', true, ...
-    'ExecutionEnvironment', 'auto', ...
-    'L2Regularization', 0.001);
-
+    'ExecutionEnvironment', 'auto');
 
 %% === 5. Train the Network ===
-net = trainNetwork(XTrain4D, YTrain, layers, options);
+net = trainNetwork(XTrain, YTrain, layers, options);
 
 %% === 6. Evaluate ===
-% xTest_1 = XTest(:,110);
-% xTest_1 = xTest_1';
-% xTest_1 = (xTest_1 - muX') ./ sigmaX';
-% % XTest = (XTest - muX') ./ sigmaX';
-YPred = predict(net, XTest4D);
+
+% Predict using LSTM
+YPred = predict(net, XTest);
 
 % Reverse z-score normalization
 YPred_real = YPred * sigmaY + muY;
 YTest_real = YTest * sigmaY + muY;
-% Compute performance
+
+% Compute RMSE
 rmse = sqrt(mean((YPred_real - YTest_real).^2));
 fprintf('Test RMSE: %.6f\n', rmse);
 
+% Plot results
 figure;
 plot(YTest_real(:), 'b');
 hold on;
 plot(YPred_real(:), 'r');
 legend('True', 'Predicted');
-title('CNN Regression Results');
+title('LSTM Regression Results');
 xlabel('Sample');
 ylabel('uwb\_tdoA\_now\_gt');
 
 %% === Save Results ===
-save('networks\trained_tdoa_net_cnn_3.mat', 'net', 'muX', 'sigmaX', 'muY', 'sigmaY');
+save('networks\trained_tdoa_net_lstm.mat', 'net', 'muX', 'sigmaX', 'muY', 'sigmaY');
