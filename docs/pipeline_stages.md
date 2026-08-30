@@ -21,6 +21,7 @@ src/                    reusable pipeline implementation
   uwb/
   localization/
   eskf/
+  models/
   evaluation/
   visualization/
   utilities/
@@ -35,6 +36,7 @@ src/                    reusable pipeline implementation
 | UWB | Ground-truth positions and surveyed anchors | Ideal TDoA range differences | `generate_tdoa_from_gt`, `simulate_tdoa_sequence_from_gt` |
 | Localization | Anchor pairs, TDoA values, initial position | NLS position and residuals | `solve_tdoa_nls_2d/3d`, `tdoa_residuals_3d` |
 | ESKF | Initial state/covariance and event updates | State/covariance histories | `ESKF` |
+| Models | Raw `N x 110` features and configured checkpoint | Corrected scalar TDoA in metres | `load_tdoa_correction_model`, `predict_tdoa_correction` |
 | Evaluation | Simulated and measured TDoA | RMSE, mean error, error vector | `compare_tdoa_sim_vs_meas` |
 | Visualization | Estimated/reference states and uncertainties | MATLAB figures | `plot_pos`, `plot_pos_err`, `plot_traj` |
 | Utilities | Arrays or timestamp vectors | Cleaned arrays or lookup result | `deleteNAN`, `isin` |
@@ -50,6 +52,7 @@ scripts
   -> uwb
   -> localization
   -> eskf
+  -> models
   -> evaluation
   -> visualization
 ```
@@ -61,12 +64,10 @@ package namespaces or new dependency framework were introduced.
 
 ## Deliberately deferred stages
 
-There are no shared `features/` or `models/` implementation folders yet.
-Feature construction, normalization, architecture definition, and inference
-remain duplicated inside legacy scripts. Creating empty folders would imply
-interfaces that do not exist. Those stages should be extracted only alongside
-the data-loader, preprocessing, feature, and model-interface work in Sections
-19-21 and their regression tests.
+There is no shared `features/` implementation folder yet. Model checkpoint
+loading, normalization, tensor reshaping, and FNN/CNN prediction are now shared
+under `src/models/`; feature-window construction remains inside legacy scripts.
+Creating an empty feature folder would imply an interface that does not exist.
 
 The stateful scripts also remain in `scripts/`. Moving their contents into
 `src/` before converting them to functions would only disguise their hidden
@@ -74,7 +75,7 @@ base-workspace dependencies.
 
 ## MATLAB path contract
 
-`setup_project.m` explicitly adds the eight `src/` stage folders, the named
+`setup_project.m` explicitly adds the nine `src/` stage folders, the named
 configuration folder, and the five script-category folders. It does not use
 `genpath` and does not add models, datasets, baseline artifacts, archives, or
 ignored local outputs.

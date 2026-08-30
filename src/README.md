@@ -11,14 +11,15 @@ under `config/`.
 | `uwb/` | Generate ideal TDoA sequences | ground-truth TDoA generation/simulation |
 | `localization/` | Estimate position from TDoA | 2-D/3-D NLS solvers and residual |
 | `eskf/` | Inertial/UWB state estimation | `ESKF` class |
+| `models/` | Shared neural checkpoint loading and inference | TDoA model loader and predictor |
 | `evaluation/` | Compare scientific outputs | simulated/measured TDoA comparison |
 | `visualization/` | Reusable per-run scientific plots | position, error, and trajectory plots |
 | `utilities/` | Small domain-independent helpers | NaN removal and timestamp membership |
 
 Run `setup_project` from the repository root to add these explicit stage
 folders to the MATLAB path. `setup_project` intentionally avoids `genpath`, so
-archives, artifacts, models, and future private/test folders cannot silently
-become runtime dependencies.
+archives, artifacts, checkpoint directories, and future private/test folders
+cannot silently become runtime dependencies.
 
 This is a structural separation only. Function names, signatures, equations,
 constants, and numerical operations were not changed during the move.

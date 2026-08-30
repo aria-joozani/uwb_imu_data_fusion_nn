@@ -10,7 +10,7 @@ function projectRoot = setup_project()
     addpath(fullfile(projectRoot, 'config'));
 
     sourceStages = {'data', 'preprocessing', 'uwb', 'localization', ...
-        'eskf', 'evaluation', 'visualization', 'utilities'};
+        'eskf', 'models', 'evaluation', 'visualization', 'utilities'};
     for i = 1:numel(sourceStages)
         addpath(fullfile(projectRoot, 'src', sourceStages{i}));
     end

@@ -38,8 +38,8 @@ end
 diary([outDir  '\net.txt']);
 diary on
 data_extractor;
-% load(['trained_tdoa_net_cnn_' net '.mat']);
-load(fullfile(projectRoot, 'models', 'active', 'trained_tdoa_net_fcc1.mat'));
+modelConfig = tdoa_model_config('fnn', projectRoot);
+tdoaModel = load_tdoa_correction_model(modelConfig);
 %% extract and intgrate imu & uwb data 
 disp("extract and intgrate imu & uwb...");
 t = unique([t_imu; t_uwb_sim]);
@@ -176,14 +176,7 @@ for k = 2:K
         X = X';
         X = X(:);
         X = X(1:110);
-        X = (X - muX') ./ sigmaX';
-        X = X';
-        % X4D  = reshape(X,  [110, 1, 1, size(X, 2)]);
-
-        % uwb_predict = predict(net, X4D);
-        uwb_predict = predict(net, X);
-        % uwb_predict = uwb_predict' .* sigmaY + muY;
-        uwb_predict = uwb_predict * sigmaY + muY;
+        uwb_predict = predict_tdoa_correction(tdoaModel, X.');
         if mod(k,1) ~= 0
             integrated_dateset(l, 10) = uwb_predict;
         end        

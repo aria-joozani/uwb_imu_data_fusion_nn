@@ -6,7 +6,8 @@ csv_file = fullfile(projectRoot, 'csv-data', 'const4', 'const4-trial3-tdoa2-traj
 anchors  = fullfile(projectRoot, 'survey-results', 'anchor_const4_survey.txt');
 
 data_extractor;
-load(fullfile(projectRoot, 'models', 'active', 'trained_tdoa_net_cnn_2.mat'));
+modelConfig = tdoa_model_config('cnn2', projectRoot);
+tdoaModel = load_tdoa_correction_model(modelConfig);
 
 %% extract and integrate imu & uwb data
 disp("extract and integrate imu & uwb...");
@@ -177,12 +178,7 @@ for pid = pair_ids
             X = dataset_epoch_data';
             X = X(:);
             X = X(1:110);
-            X = (X - muX') ./ sigmaX';
-            X4D = reshape(X, [110, 1, 1, size(X,2)]);
-
-            % NN predict
-            y = predict(net, X4D);
-            y = y * sigmaY + muY;
+            y = predict_tdoa_correction(tdoaModel, X.');
 
             % ----------------------------------------------------------
             % Alpha filter ONLY within this rollout, reset per target_idx:

@@ -23,6 +23,7 @@ changed. Git rename metadata preserves file history.
 |   |-- uwb/
 |   |-- localization/
 |   |-- eskf/
+|   |-- models/
 |   |-- evaluation/
 |   |-- visualization/
 |   `-- utilities/
@@ -78,7 +79,7 @@ Start MATLAB in the repository root and run:
 projectRoot = setup_project();
 ```
 
-This adds the eight explicit `src/` pipeline-stage folders and the five
+This adds the nine explicit `src/` pipeline-stage folders and the five
 `scripts/` category folders to the MATLAB path. It deliberately does not add
 models, artifacts, archives, or local output directories. Legacy scripts still
 use base-workspace state and should be invoked from the repository root until

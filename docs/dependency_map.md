@@ -38,7 +38,9 @@ flowchart TD
     SPLIT --> CKPT[SeriesNetwork checkpoint<br/>net + mu/sigma X/Y]
 
     PRE --> INF[inference.m]
-    CKPT --> INF
+    CKPT --> MLOAD[load_tdoa_correction_model]
+    MLOAD --> MPRED[predict_tdoa_correction]
+    MPRED --> INF
     INF --> IFEAT[duplicated feature construction]
     IFEAT --> PRED[predict ideal TDoA]
     PRED --> TMET[TDoA RMSE/MAE]

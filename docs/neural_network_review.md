@@ -80,7 +80,13 @@ The following describes the checkpoints now organized under `models/active/`, as
 
 The saved CNN3 has unique, automatically suffixed layer names and is loadable, while the current script repeats explicit names. Thus the checkpoint was not produced by the source exactly as it stands.
 
-The `models/legacy/` directory holds additional, architecturally different files with overlapping model names, including an LSTM. There is no authoritative registry mapping thesis labels such as “CNN1” to one path, hash, generator version, split, or training run.
+The `models/legacy/` directory holds additional, architecturally different files with overlapping model names, including an LSTM. Section 21 adds a centralized runtime mapping for the reviewed active FNN/CNN checkpoints, but there is still no authoritative provenance registry mapping a thesis label to a checkpoint hash, generator version, split, and training run.
+
+Active FNN/CNN inference now uses `tdoa_model_config`,
+`load_tdoa_correction_model`, and `predict_tdoa_correction`. This centralizes
+checkpoint statistics and input layouts while accurately naming the output as
+an ideal TDoA range difference. The legacy LSTM is excluded because its
+sequence contract is different and unresolved.
 
 Normalization statistics also separate the active checkpoints into different populations. CNN1, CNN2, and FCC1 share one statistics set; `trained_tdoa_net_5.mat` and CNN3 use another. The exact source manifests that produced either set are **UNKNOWN**.
 

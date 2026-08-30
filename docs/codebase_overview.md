@@ -114,7 +114,7 @@ The nominal state is six-dimensional `[position; velocity]`. Attitude is stored 
 
 ### Baseline neural inference and position evaluation
 
-`inference.m` -> selects one of 21 const4 flights by editing an index -> currently loads the active FNN checkpoint despite retaining a `net = '2'` variable -> duplicates integration and feature-building logic -> predicts enhanced TDoA -> calculates TDoA metrics -> replaces `uwb(:,3)` -> runs the ESKF -> calculates position metrics -> writes figures and an appended diary
+`inference.m` -> selects one of 21 const4 flights by editing an index -> loads the configured active FNN through the shared TDoA model interface -> retains duplicated integration and feature-building logic -> predicts enhanced TDoA -> calculates TDoA metrics -> replaces `uwb(:,3)` -> runs the ESKF -> calculates position metrics -> writes figures and an appended diary
 
 There is no loop that reproducibly evaluates every flight and every model. The Excel tables appear to have been assembled outside a single auditable runner.
 
