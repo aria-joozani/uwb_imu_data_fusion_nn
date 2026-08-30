@@ -15,7 +15,7 @@ function plot_pos_err(t, pos_error, Ppo)
         delta_z(i) = sqrt(Ppo(i,3,3));
     end
 
-    figure('Color','w','Position',[100 100 800 600]);
+    figure('Name','pos_error','Color','w','Position',[100 100 800 600]);
 
     subplot(3,1,1);
     title('Estimation Error', 'FontSize', FONTSIZE);

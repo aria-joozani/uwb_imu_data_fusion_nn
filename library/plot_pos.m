@@ -1,7 +1,7 @@
 function plot_pos(t, Xpo, t_vicon, pos_vicon)
     FONTSIZE = 18;
 
-    figure('Color','w','Position',[100 100 800 600]);
+    figure('Name','pos','Color','w','Position',[100 100 800 600]);
     
     subplot(3,1,1);
     plot(t_vicon, pos_vicon(:,1), 'Color', [1 0.27 0], 'LineWidth', 2.5); hold on;

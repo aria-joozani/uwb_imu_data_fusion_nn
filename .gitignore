@@ -1,4 +1,35 @@
-\csv-data
-\export-data-set
-\survey-results
-net2_training_data.mat
+# Raw, reduced, and generated datasets stay local.
+/csv-data/
+/export-data-set/
+/export-data-set-r/
+/survey-results/
+
+# Generated evaluation trees stay local. Keep only the four compact
+# historical summary workbooks used by run_baseline_evaluation.m.
+/result/*
+!/result/result_overall_tdoa_ma.xlsx
+!/result/result_overall_tdoa_rms.xlsx
+!/result/result_position_ma.xlsx
+!/result/result_position_rms.xlsx
+/saved_figures/
+/results/*.mat
+
+# Root-level generated plots, workbook copies, and training logs.
+/*.fig
+/*.png
+/*.xlsx
+/training_log*.csv
+
+# Large generated calibration/training intermediates.
+/net2_training_data.mat
+/prepared_data_for_ptq.mat
+
+# Editor/diagram backups and local archives.
+*.asv
+*.bkp
+*.rar
+*.zip
+
+# Local agent scratch state and third-party legacy code with unknown license.
+/MEMORY.md
+/ieee.m

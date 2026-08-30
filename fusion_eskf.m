@@ -1,6 +1,12 @@
 clc; close all; clear all;
-csv_file = 'csv-data\const4\const4-trial3-tdoa2-traj1.csv';
+csv_file = 'csv-data\const4\const4-trial7-tdoa2-manual3.csv';
 anchors = 'survey-results\anchor_const4_survey.txt';
+outDir = 'result\const4-trial7-tdoa2-manual3\eskf';
+if ~exist(outDir, 'dir')
+    mkdir(outDir);
+end
+diary([outDir  '\eskf.txt']);
+diary on
 data_extractor;
 %% Initialize ESKF with UWB data 
 disp("Initialize ESKF with UWB data...");
@@ -57,13 +63,31 @@ rms_y = sqrt(mean((pos_error(:,2)).^2));
 rms_z = sqrt(mean((pos_error(:,3)).^2));
 RMS_all = sqrt(rms_x^2 + rms_y^2 + rms_z^2);
 
+ma_x  = mean(abs(pos_error(:,1)));
+ma_y  = mean(abs(pos_error(:,2)));
+ma_z  = mean(abs(pos_error(:,3)));
+ma_all  = mean(abs(ma_x) + abs(ma_y) + abs(ma_x));
+
 fprintf('The RMS error for position x is %.4f m\n', rms_x);
 fprintf('The RMS error for position y is %.4f m\n', rms_y);
 fprintf('The RMS error for position z is %.4f m\n', rms_z);
 fprintf('The overall RMS error of position estimation is %.4f m\n', RMS_all);
 
+fprintf('The MA error for position x is %.4f m\n', ma_x);
+fprintf('The MA error for position y is %.4f m\n', ma_y);
+fprintf('The MA error for position z is %.4f m\n', ma_z);
+fprintf('The overall Ma error of position estimation is %.4f m\n', ma_all);
 %% Plot results
 disp("Plot results...");
 plot_pos(t, eskf.Xpo, t_vicon, pos_vicon);
 plot_pos_err(t, pos_error, eskf.Ppo);
 plot_traj(pos_vicon, eskf.Xpo, anchor_position);
+%% save figures
+
+figs = findall(0, 'Type', 'figure');
+
+for k = 1:length(figs)
+    savefig(figs(k), fullfile(outDir, figs(k).Name));
+end
+
+diary off

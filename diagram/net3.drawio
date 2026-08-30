@@ -1,0 +1,536 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.2.8 Chrome/140.0.7339.240 Electron/38.4.0 Safari/537.36" version="28.2.8">
+  <diagram name="CNN_TDoA_Network" id="0">
+    <mxGraphModel dx="1042" dy="634" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="980" pageHeight="690" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="in1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+          <mxGeometry x="80" y="120" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="in2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+          <mxGeometry x="80" y="145" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="in3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+          <mxGeometry x="80" y="170" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="in4" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+          <mxGeometry x="80" y="195" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="in5" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+          <mxGeometry x="80" y="220" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="in6" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+          <mxGeometry x="80" y="245" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="in7" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+          <mxGeometry x="80" y="270" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="in8" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+          <mxGeometry x="80" y="295" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="inLabel" value="Input layer&#xa;110×1×1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;" parent="1" vertex="1">
+          <mxGeometry x="55" y="360" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="c1a1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+          <mxGeometry x="210" y="145" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c1a2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+          <mxGeometry x="210" y="170" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c1a3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+          <mxGeometry x="210" y="195" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c1a4" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+          <mxGeometry x="210" y="220" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c1a5" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+          <mxGeometry x="210" y="245" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c1b1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;opacity=85;" parent="1" vertex="1">
+          <mxGeometry x="222" y="155" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c1b2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;opacity=85;" parent="1" vertex="1">
+          <mxGeometry x="222" y="180" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c1b3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;opacity=85;" parent="1" vertex="1">
+          <mxGeometry x="222" y="205" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c1b4" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;opacity=85;" parent="1" vertex="1">
+          <mxGeometry x="222" y="230" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c1b5" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;opacity=85;" parent="1" vertex="1">
+          <mxGeometry x="222" y="255" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c1c1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;opacity=70;" parent="1" vertex="1">
+          <mxGeometry x="234" y="165" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c1c2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;opacity=70;" parent="1" vertex="1">
+          <mxGeometry x="234" y="190" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c1c3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;opacity=70;" parent="1" vertex="1">
+          <mxGeometry x="234" y="215" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c1c4" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;opacity=70;" parent="1" vertex="1">
+          <mxGeometry x="234" y="240" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c1c5" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;opacity=70;" parent="1" vertex="1">
+          <mxGeometry x="234" y="265" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c1Label" value="Conv1 + BN + ReLU&#xa;Kernel 9×1, Filters 16&#xa;Output: 110×1×16" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;" parent="1" vertex="1">
+          <mxGeometry x="175" y="360" width="170" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p1a1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+          <mxGeometry x="355" y="175" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="p1a2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+          <mxGeometry x="355" y="200" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="p1a3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+          <mxGeometry x="355" y="225" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="p1a4" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+          <mxGeometry x="355" y="250" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="p1b1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;opacity=80;" parent="1" vertex="1">
+          <mxGeometry x="367" y="185" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="p1b2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;opacity=80;" parent="1" vertex="1">
+          <mxGeometry x="367" y="210" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="p1b3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;opacity=80;" parent="1" vertex="1">
+          <mxGeometry x="367" y="235" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="p1b4" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;opacity=80;" parent="1" vertex="1">
+          <mxGeometry x="367" y="260" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="p1Label" value="MaxPool&#xa;2×1, stride 2&#xa;Output: 55×1×16" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;" parent="1" vertex="1">
+          <mxGeometry x="320" y="360" width="170" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="c2a1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+          <mxGeometry x="480" y="165" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c2a2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+          <mxGeometry x="480" y="190" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c2a3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+          <mxGeometry x="480" y="215" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c2a4" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+          <mxGeometry x="480" y="240" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c2b1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;opacity=85;" parent="1" vertex="1">
+          <mxGeometry x="492" y="175" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c2b2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;opacity=85;" parent="1" vertex="1">
+          <mxGeometry x="492" y="200" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c2b3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;opacity=85;" parent="1" vertex="1">
+          <mxGeometry x="492" y="225" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c2b4" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;opacity=85;" parent="1" vertex="1">
+          <mxGeometry x="492" y="250" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c2c1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;opacity=70;" parent="1" vertex="1">
+          <mxGeometry x="504" y="185" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c2c2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;opacity=70;" parent="1" vertex="1">
+          <mxGeometry x="504" y="210" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c2c3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;opacity=70;" parent="1" vertex="1">
+          <mxGeometry x="504" y="235" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c2c4" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;opacity=70;" parent="1" vertex="1">
+          <mxGeometry x="504" y="260" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c2d1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;opacity=55;" parent="1" vertex="1">
+          <mxGeometry x="516" y="195" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c2d2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;opacity=55;" parent="1" vertex="1">
+          <mxGeometry x="516" y="220" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c2d3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;opacity=55;" parent="1" vertex="1">
+          <mxGeometry x="516" y="245" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c2d4" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;opacity=55;" parent="1" vertex="1">
+          <mxGeometry x="516" y="270" width="22" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="c2Label" value="Conv2 + BN + ReLU&#xa;Kernel 5×1, Filters 32&#xa;Output: 55×1×32" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;" parent="1" vertex="1">
+          <mxGeometry x="450" y="360" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="flatBar" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="620" y="80" width="20" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="flatLabel" value="Flatten&#xa;55×1×32 → 1760" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;" parent="1" vertex="1">
+          <mxGeometry x="610" y="365" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="fc1n1" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="740" y="160" width="18" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="fc1n2" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="740" y="200" width="18" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="fc1n3" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="740" y="240" width="18" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="fc2n1" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="820" y="180" width="18" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="fc2n2" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="820" y="220" width="18" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="outNode" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="900" y="200" width="18" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="fcLabel" value="Fully Connected&#xa;FC(32) + ReLU → FC(1)&#xa;Regression output" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;" parent="1" vertex="1">
+          <mxGeometry x="730" y="360" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="e_in_c1" style="endArrow=none;html=1;rounded=0;" parent="1" source="in4" target="c1a3" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_c1_p1" style="endArrow=none;html=1;rounded=0;" parent="1" source="c1b3" target="p1a2" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_p1_c2" style="endArrow=none;html=1;rounded=0;" parent="1" source="p1b2" target="c2a2" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_c2_flat" style="endArrow=none;html=1;rounded=0;" parent="1" source="c2c2" target="flatBar" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_flat_fc1" style="endArrow=none;html=1;rounded=0;" parent="1" source="flatBar" target="fc1n2" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_fc1_1" style="endArrow=none;html=1;rounded=0;" parent="1" source="fc1n1" target="fc2n1" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_fc1_2" style="endArrow=none;html=1;rounded=0;" parent="1" source="fc1n2" target="fc2n1" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_fc1_3" style="endArrow=none;html=1;rounded=0;" parent="1" source="fc1n3" target="fc2n2" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_fc2_out1" style="endArrow=none;html=1;rounded=0;" parent="1" source="fc2n1" target="outNode" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_fc2_out2" style="endArrow=none;html=1;rounded=0;" parent="1" source="fc2n2" target="outNode" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
+%% load data and network
+clc; close all; clear all;
+csv_file = 'csv-data\const4\const4-trial1-tdoa2-traj1.csv';
+anchors = 'survey-results\anchor_const4_survey.txt';
+data_extractor;
+load("trained_tdoa_net_cnn_2.mat");
+%% extract and intgrate imu & uwb data
+disp("extract and intgrate imu & uwb...");
+t = unique([t_imu; t_uwb_sim]);
+K = length(t);
+
+% t 1 + acc 3 + gyro 3 + UWB 3 + UWB_sim 1
+integrated_dateset = nan(K, 11);
+uwb_row_at_time = nan(K,1);   % maps integrated time index -> row index in uwb
+integrated_dateset(:, 1) = t;
+
+fig1 = uifigure('Name','extract and intgrate imu & uwb...','Position',[500 400 400 120]);
+d1 = uiprogressdlg(fig1, ...
+    'Title','extract and intgrate imu & uwb', ...
+    'Message','Initializing...', ...
+    'Cancelable','on', ...
+    'Value',0);
+
+
+for k = 2:K
+
+    if mod(k, round(K/100)) == 0  % update every 1% of progress
+        d1.Value = k/K;
+        d1.Message = sprintf('Progress: %d%% completed', round(100*k/K));
+        drawnow limitrate;  % more efficient refresh
+    end
+
+    [imu_k, imu_check] = isin(t_imu, t(k-1));
+    [uwb_k, uwb_check] = isin(t_uwb_sim, t(k-1));
+    dt = t(k) - t(k-1);
+
+    if imu_check
+        integrated_dateset(k , 2:7) = imu(imu_k,:);
+        %%eskf.predict(imu(imu_k,:), dt, imu_check, k);
+    end
+
+    if uwb_check
+        integrated_dateset(k , 8:10) = uwb(uwb_k,:);
+        integrated_dateset(k , 11) = uwb_sim(uwb_k,3);
+        uwb_row_at_time(k) = uwb_k;
+        %%eskf.UWB_correct(uwb_sim(uwb_k,:), anchor_position, k);
+    end
+end
+%% simulation the trajectry
+disp("simulation the trajectry...");
+
+fig2 = uifigure('Name','simulation the trajectry...','Position',[500 400 400 120]);
+d2 = uiprogressdlg(fig2, ...
+    'Title','simulation the trajectry', ...
+    'Message','Initializing...', ...
+    'Cancelable','on', ...
+    'Value',0);
+
+sreach_next_sample_window_size = 100;
+
+max_num_of_epoch = size(uwb);
+max_num_of_epoch = max_num_of_epoch(1);
+number_of_interp = 17;
+interp_time = zeros([number_of_interp 1]);
+imu_epoch_samples_count = zeros([max_num_of_epoch 6]);
+dataset_epoch_data = zeros([number_of_interp+2 6]);
+uwb_enhanced = zeros([max_num_of_epoch 1]);
+
+% uwb_enhanced(1:8) = uwb(1:8, 3);
+m = 1;
+% history-chain inference to enhance TDOA
+disp("history-chain inference (autoregressive) ...");
+
+disp("history-chain inference (autoregressive) ...");
+
+fig_inf = uifigure('Name','NN history-chain inference','Position',[500 400 420 130]);
+d_inf = uiprogressdlg(fig_inf, ...
+    'Title','Neural Network Inference', ...
+    'Message','Initializing...', ...
+    'Cancelable','on', ...
+    'Value',0);
+
+numOfHistory = 5;                 % <-- YOU CONTROL THIS (H)
+number_of_interp = 17;
+sreach_next_sample_window_size = 100;
+
+% working copy of TDOA (we will progressively replace with predictions)
+tdoa_corr = integrated_dateset(:,10);
+
+% output array aligned with uwb rows
+max_num_of_epoch = size(uwb,1);
+uwb_enhanced = nan(max_num_of_epoch,1);
+
+% temporary buffers
+interp_time = zeros(number_of_interp,1);
+dataset_epoch_data = zeros(number_of_interp+2, 6); % 19 x 6
+
+% all valid pair IDs found in data
+pair_ids = unique(integrated_dateset(~isnan(integrated_dateset(:,8)), 8))';
+
+% ---- estimate total number of inference steps ----
+total_steps = 0;
+for pid = pair_ids
+    idxs = find(integrated_dateset(:,8) == pid);
+    if numel(idxs) > 1
+        total_steps = total_steps + (numel(idxs) - 1);
+    end
+end
+
+step_counter = 0;
+
+for pid = pair_ids
+
+    % indices in integrated timeline for this pair id (in time order)
+    idxs = find(integrated_dateset(:,8) == pid);
+    if numel(idxs) < 2
+        continue;
+    end
+
+    % We predict forward: (idxs(i) -> idxs(i+1)) predicts corrected TDOA at idxs(i+1)
+    for i = 1:(numel(idxs)-1)
+
+        step_counter = step_counter + 1;
+
+        if mod(step_counter, max(1, round(total_steps/100))) == 0 || step_counter == total_steps
+            d_inf.Value = step_counter / total_steps;
+            d_inf.Message = sprintf('Progress: %d%% (%d / %d)', ...
+                round(100 * step_counter / total_steps), ...
+                step_counter, total_steps);
+            drawnow limitrate;
+
+            if d_inf.CancelRequested
+                disp("Inference cancelled by user.");
+                close(fig_inf);
+                return;
+            end
+        end
+        % target time index we want to estimate = idxs(i+1)
+        target_idx = idxs(i+1);
+
+        % chain start index for history
+        start_i = max(1, i - numOfHistory);
+
+        % local copy so we only use last H history steps for this estimation
+        tdoa_local = tdoa_corr;
+
+        % run forward from (i-H) -> i to estimate the target
+        for j = start_i:i
+            k_idx = idxs(j);
+
+            % find next sample of same pair (normally idxs(j+1))
+            % but still safe if there are missing events
+            l_idx = idxs(j+1);
+
+            % Build NN input using:
+            % - IMU between k_idx and l_idx (interpolate 17 samples)
+            % - anchors (pid and pid+1 like your logic)
+            % - two TDOA values: at k_idx and l_idx
+            %   IMPORTANT: k uses corrected (history), l uses current local value (initially raw)
+            tdoa_k = tdoa_local(k_idx);
+            tdoa_l = tdoa_local(l_idx);
+
+            % --- collect IMU samples in [k_idx : l_idx] ---
+            validRows = ~isnan(integrated_dateset(k_idx:l_idx, 2));
+            data = integrated_dateset(k_idx:l_idx, 1:7);         % time + imu
+            imu_epoch_samples = data(validRows, :);
+            numValidRows = size(imu_epoch_samples,1);
+
+            % handle too few IMU samples
+            if numValidRows < 2
+                imu_epoch_samples(2,:) = imu_epoch_samples(1,:);
+                imu_epoch_samples(2,1) = imu_epoch_samples(2,1) + 0.1;
+            end
+
+            sample_tdoa_time = integrated_dateset(l_idx,1) - integrated_dateset(k_idx,1);
+            interp_time_step_size = sample_tdoa_time / number_of_interp;
+
+            for ii = 1:number_of_interp
+                interp_time(ii) = integrated_dateset(k_idx,1) + interp_time_step_size * ii;
+            end
+
+            imu_epoch_samples_interp = interp1( ...
+                imu_epoch_samples(:,1), imu_epoch_samples(:,2:7), ...
+                interp_time, 'linear', 'extrap');
+
+            % Fill epoch tensor (same structure as your old code)
+            dataset_epoch_data(1:number_of_interp, :) = imu_epoch_samples_interp;
+
+            % Anchor pair (same logic as yours)
+            dataset_epoch_data(18, 1:3) = anchor_position(pid+1, :);
+            if pid == 7
+                dataset_epoch_data(18, 4:6) = anchor_position(1, :);
+            else
+                dataset_epoch_data(18, 4:6) = anchor_position(pid+2, :);
+            end
+
+            % Put TWO TDOA values (history-aware):
+            dataset_epoch_data(19,1) = tdoa_k;   % corrected/history at k
+            dataset_epoch_data(19,2) = tdoa_l;   % current value at l (raw or previously improved)
+
+            % ---- prepare CNN input (unchanged feature size 110) ----
+            X = dataset_epoch_data';
+            X = X(:);
+            X = X(1:110);
+            X = (X - muX') ./ sigmaX';
+            X4D = reshape(X, [110, 1, 1, size(X,2)]);
+
+            % ---- predict corrected TDOA for l ----
+            y = predict(net, X4D);
+            y = y * sigmaY + muY;   % de-normalize
+
+            % update local chain
+            tdoa_local(l_idx) = y;
+        end
+
+        % commit ONLY the target estimate (so each estimate uses only last H steps)
+        tdoa_corr(target_idx) = tdoa_local(target_idx);
+        % tdoa_corr(target_idx) = filter_output;
+        % also write to output uwb row if it exists
+        uwb_row = uwb_row_at_time(target_idx);
+        if ~isnan(uwb_row)
+            uwb_enhanced(uwb_row) = tdoa_corr(target_idx);
+        end
+    end
+end
+
+% If first samples never got predicted (because they are "k" not "l"), fill them with raw
+missing = isnan(uwb_enhanced);
+uwb_enhanced(missing) = uwb(missing,3);
+
+
+
+
+%% calculate error
+error_net = uwb_sim(:,3) - uwb_enhanced(1:max_num_of_epoch);
+error_raw = uwb_sim(:,3) - uwb(:,3);
+
+rms_raw = sqrt(mean((error_raw(:,1)).^2));
+rms_net = sqrt(mean((error_net(:,1)).^2));
+
+fprintf('The RMS error for uwb raw data is %.4f m\n', rms_raw);
+fprintf('The RMS error for uwb net data is %.4f m\n', rms_net);
+
+hold
+plot(error_raw)
+plot(error_net)
+
+%%
+% uwb(:,3) = uwb_enhanced(1:max_num_of_epoch);
+% replace uwb with enhanced
+uwb(:,3) = uwb_enhanced;
+%% Initialize ESKF with UWB data
+disp("Initialize ESKF with UWB data...");
+
+fig3 = uifigure('Name','fusion data...','Position',[500 400 400 120]);
+d3 = uiprogressdlg(fig3, ...
+    'Title','fusion data', ...
+    'Message','Initializing...', ...
+    'Cancelable','on', ...
+    'Value',0);
+
+t = unique([t_imu; t_uwb_sim]);
+K = length(t);
+X0 = zeros(6,1); X0(1) = 1.25; X0(2) = 0.0; X0(3) = 0.07;
+q0 = [1, 0, 0, 0]; % quaternion
+std_xy0 = 0.1; std_z0 = 0.1; std_vel0 = 0.1;
+std_rp0 = 0.1; std_yaw0 = 0.1;
+P0 = diag([std_xy0^2, std_xy0^2, std_z0^2, std_vel0^2, std_vel0^2, std_vel0^2, ...
+           std_rp0^2, std_rp0^2, std_yaw0^2]);
+eskf = ESKF(X0, q0, P0, K);
+fprintf('Timestep: %d\n', K);
+fprintf('Start state estimation\n');
+
+for k = 2:K
+    if mod(k, round(K/100)) == 0  % update every 1% of progress
+        d3.Value = k/K;
+        d3.Message = sprintf('Progress: %d%% completed', round(100*k/K));
+        drawnow limitrate;  % more efficient refresh
+    end
+    [imu_k, imu_check] = isin(t_imu, t(k-1));
+    [uwb_k, uwb_check] = isin(t_uwb, t(k-1));
+    dt = t(k) - t(k-1);
+
+    eskf.predict(imu(imu_k,:), dt, imu_check, k);
+    if uwb_check
+        eskf.UWB_correct(uwb(uwb_k,:), anchor_position, k);
+    end
+end
+fprintf('Finish the state estimation\n');
+
+%% Interpolate Vicon for ground truth
+disp("Interpolate Vicon for ground truth...");
+x_interp = interp1(t_vicon, pos_vicon(:,1), t, 'spline');
+y_interp = interp1(t_vicon, pos_vicon(:,2), t, 'spline');
+z_interp = interp1(t_vicon, pos_vicon(:,3), t, 'spline');
+interp_gt = [x_interp(:), y_interp(:), z_interp(:)];
+
+position_k = eskf.Xpo(:, 1:3);  % Estimated position at time k
+velocity_k = eskf.Xpo(:, 4:6);  % Estimated velocity
+
+pos_error = position_k - interp_gt;
+rms_x = sqrt(mean((pos_error(:,1)).^2));
+rms_y = sqrt(mean((pos_error(:,2)).^2));
+rms_z = sqrt(mean((pos_error(:,3)).^2));
+RMS_all = sqrt(rms_x^2 + rms_y^2 + rms_z^2);
+
+fprintf('The RMS error for position x is %.4f m\n', rms_x);
+fprintf('The RMS error for position y is %.4f m\n', rms_y);
+fprintf('The RMS error for position z is %.4f m\n', rms_z);
+fprintf('The overall RMS error of position estimation is %.4f m\n', RMS_all);
+
+%% Plot results
+disp("Plot results...");
+plot_pos(t, eskf.Xpo, t_vicon, pos_vicon);
+plot_pos_err(t, pos_error, eskf.Ppo);
+plot_traj(pos_vicon, eskf.Xpo, anchor_position);

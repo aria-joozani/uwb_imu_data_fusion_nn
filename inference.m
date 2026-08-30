@@ -1,9 +1,44 @@
 %% load data and network
 clc; close all; clear all;
-csv_file = 'csv-data\const4\const4-trial3-tdoa2-traj1.csv';
+trials = {
+    'const4-trial1-tdoa2-traj1'
+    'const4-trial1-tdoa2-traj2'
+    'const4-trial1-tdoa2-traj3'
+    'const4-trial2-tdoa2-traj1'
+    'const4-trial2-tdoa2-traj2'
+    'const4-trial2-tdoa2-traj3'
+    'const4-trial3-tdoa2-traj1'
+    'const4-trial3-tdoa2-traj2'
+    'const4-trial3-tdoa2-traj3'
+    'const4-trial4-tdoa2-traj1'
+    'const4-trial4-tdoa2-traj2'
+    'const4-trial4-tdoa2-traj3'
+    'const4-trial5-tdoa2-traj1'
+    'const4-trial5-tdoa2-traj2'
+    'const4-trial5-tdoa2-traj3'
+    'const4-trial6-tdoa2-traj1'
+    'const4-trial6-tdoa2-traj2'
+    'const4-trial6-tdoa2-traj3'
+    'const4-trial7-tdoa2-manual1'
+    'const4-trial7-tdoa2-manual2'
+    'const4-trial7-tdoa2-manual3'
+};
+
+data = trials{11};
+net = '2';
+
+csv_file = ['csv-data\const4\' data '.csv'];
 anchors = 'survey-results\anchor_const4_survey.txt';
+% outDir = ['result\' data '\cnn_net_' net];
+outDir = ['result\' data '\fcc1'];
+if ~exist(outDir, 'dir')
+    mkdir(outDir);
+end
+diary([outDir  '\net.txt']);
+diary on
 data_extractor;
-load("networks\trained_tdoa_net_cnn_5.mat");
+% load(['trained_tdoa_net_cnn_' net '.mat']);
+load('trained_tdoa_net_fcc1.mat');
 %% extract and intgrate imu & uwb data 
 disp("extract and intgrate imu & uwb...");
 t = unique([t_imu; t_uwb_sim]);
@@ -45,6 +80,8 @@ for k = 2:K
         %%eskf.UWB_correct(uwb_sim(uwb_k,:), anchor_position, k);
     end
 end
+close(d1);
+close(fig1);
 %% simulation the trajectry
 disp("simulation the trajectry...");
 
@@ -101,6 +138,10 @@ for k = 2:K
         imu_epoch_samples = data(validRows, :);
         interp_time_step_size = sample_tdoa_time/17;
 
+        if(k == K)
+            break;
+        end
+
         for ii = 1:number_of_interp
             interp_time(ii) = integrated_dateset(k, 1) + interp_time_step_size * ii;
         end
@@ -135,14 +176,14 @@ for k = 2:K
         X = X(:);
         X = X(1:110);
         X = (X - muX') ./ sigmaX';
-        % X = X';
-        X4D  = reshape(X,  [110, 1, 1, size(X, 2)]);
+        X = X';
+        % X4D  = reshape(X,  [110, 1, 1, size(X, 2)]);
 
-        uwb_predict = predict(net, X4D);
-
+        % uwb_predict = predict(net, X4D);
+        uwb_predict = predict(net, X);
         % uwb_predict = uwb_predict' .* sigmaY + muY;
         uwb_predict = uwb_predict * sigmaY + muY;
-        if k % 300 ~= 0
+        if mod(k,1) ~= 0
             integrated_dateset(l, 10) = uwb_predict;
         end        
         uwb_enhanced(m) = uwb_predict;
@@ -150,23 +191,102 @@ for k = 2:K
         k = l;
     end
 end
-
+close(d2);
+close(fig2);
 %% calculate error 
-error_net = uwb_sim(:,3) - uwb_enhanced(1:max_num_of_epoch);
+% error_net = uwb_sim(:,3) - uwb_enhanced(1:max_num_of_epoch);
+% error_raw = uwb_sim(:,3) - uwb(:,3);
+%
+% rms_raw = sqrt(mean((error_raw(:,1)).^2));
+% rms_net = sqrt(mean((error_net(:,1)).^2));
+% mae_raw  = mean(abs(error_raw(:,1)));
+% mae_net  = mean(abs(error_net(:,1)));
+%
+% fprintf('The RMS error for uwb raw data is %.4f m\n', rms_raw);
+% fprintf('The RMS error for uwb net data is %.4f m\n', rms_net);
+%
+% fprintf('The MAE error for uwb raw data is %.4f m\n', mae_raw);
+% fprintf('The MAE error for uwb net data is %.4f m\n', mae_net);
+% hold
+% plot(error_raw)
+% plot(error_net)
+
+%% 4) TDOA error metrics + plots
+% disp("Compute TDOA error metrics...");
+%
+% uwb_enhanced_with_pair = uwb;
+% uwb_enhanced_with_pair(:,3) = uwb_enhanced(1:max_num_of_epoch);
+% error_raw = uwb_sim(:,3) - uwb(:,3);
+% error_net = uwb_sim(:,3) - uwb_enhanced;
+
+%% 4) TDOA error metrics + plots (PER-PAIR)
+disp("Compute TDOA error metrics (per pair) ...");
+
+uwb_enhanced_with_pair = uwb;
+uwb_enhanced_with_pair(:,3) = uwb_enhanced(1:max_num_of_epoch);
+
 error_raw = uwb_sim(:,3) - uwb(:,3);
+error_net = uwb_sim(:,3) - uwb_enhanced_with_pair(:,3);
 
 rms_raw = sqrt(mean((error_raw(:,1)).^2));
 rms_net = sqrt(mean((error_net(:,1)).^2));
+ma_raw  = mean(abs(error_raw(:,1)));
+ma_net  = mean(abs(error_net(:,1)));
 
 fprintf('The RMS error for uwb raw data is %.4f m\n', rms_raw);
 fprintf('The RMS error for uwb net data is %.4f m\n', rms_net);
 
+fprintf('The MAE error for uwb raw data is %.4f m\n', ma_raw);
+fprintf('The MAE error for uwb net data is %.4f m\n', ma_net);
 hold
-plot(error_raw)
-plot(error_net)
+
+% ---- overall plot (optional) ----
+figure('Name','TDOA error (overall)');
+plot(error_raw,'LineWidth',1); hold on;
+plot(error_net,'LineWidth',1);
+grid on; legend('Raw','Enhanced');
+title('TDOA error (overall)'); xlabel('UWB epoch'); ylabel('Error (m)');
+
+% ---- per-pair plots ----
+pair_ids = unique(uwb(:,1))';   % pair id is in column 1
+
+fprintf('\n=== Per-Pair TDOA Error Metrics ===\n');
+for pid = pair_ids
+
+    idx = (uwb(:,1) == pid);    % rows for this pair
+
+    if sum(idx) < 5
+        fprintf('Pair %d: skipped (too few samples: %d)\n', pid, sum(idx));
+        continue;
+    end
+
+    % errors for this pair
+    e_raw = error_raw(idx);
+    e_net = error_net(idx);
+
+    % metrics
+    rmse_raw = sqrt(mean(e_raw.^2));
+    rmse_net = sqrt(mean(e_net.^2));
+    mae_raw  = mean(abs(e_raw));
+    mae_net  = mean(abs(e_net));
+
+    fprintf('Pair %d: RMSE raw=%.4f, RMSE enh=%.4f | MAE raw=%.4f, MAE enh=%.4f | N=%d\n', ...
+        pid, rmse_raw, rmse_net, mae_raw, mae_net, sum(idx));
+
+    % plot (separate figure per pair)
+    figure('Name',sprintf('Pair %d TDOA error', pid));
+    plot(e_raw,'LineWidth',1); hold on;
+    plot(e_net,'LineWidth',1);
+    grid on;
+    title(sprintf('TDOA Error for Pair %d', pid));
+    xlabel('Sample index (within this pair)');
+    ylabel('Error (m)');
+    legend('Raw','Enhanced');
+end
 
 %%
 uwb(:,3) = uwb_enhanced(1:max_num_of_epoch);
+
 %% Initialize ESKF with UWB data 
 disp("Initialize ESKF with UWB data...");
 
@@ -222,13 +342,30 @@ rms_y = sqrt(mean((pos_error(:,2)).^2));
 rms_z = sqrt(mean((pos_error(:,3)).^2));
 RMS_all = sqrt(rms_x^2 + rms_y^2 + rms_z^2);
 
+ma_x  = mean(abs(pos_error(:,1)));
+ma_y  = mean(abs(pos_error(:,2)));
+ma_z  = mean(abs(pos_error(:,3)));
+ma_all  = mean(abs(ma_x) + abs(ma_y) + abs(ma_x));
+
 fprintf('The RMS error for position x is %.4f m\n', rms_x);
 fprintf('The RMS error for position y is %.4f m\n', rms_y);
 fprintf('The RMS error for position z is %.4f m\n', rms_z);
 fprintf('The overall RMS error of position estimation is %.4f m\n', RMS_all);
 
+fprintf('The MA error for position x is %.4f m\n', ma_x);
+fprintf('The MA error for position y is %.4f m\n', ma_y);
+fprintf('The MA error for position z is %.4f m\n', ma_z);
+fprintf('The overall Ma error of position estimation is %.4f m\n', ma_all);
 %% Plot results
 disp("Plot results...");
 plot_pos(t, eskf.Xpo, t_vicon, pos_vicon);
 plot_pos_err(t, pos_error, eskf.Ppo);
 plot_traj(pos_vicon, eskf.Xpo, anchor_position);
+%% save figures
+
+figs = findall(0, 'Type', 'figure');
+
+for k = 1:length(figs)
+    savefig(figs(k), fullfile(outDir, figs(k).Name));
+end
+diary off

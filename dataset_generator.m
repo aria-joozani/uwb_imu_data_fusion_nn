@@ -43,6 +43,8 @@ for k = 2:K
         %%eskf.UWB_correct(uwb_sim(uwb_k,:), anchor_position, k);
     end
 end
+close(d1);
+close(fig1);
 %% create epoch base data for each TDOA 
 disp("create epoch base data for each TDOA...");
 
@@ -128,13 +130,16 @@ for k = 2:K
                 anchor_position(pair_of_tag_check+2, :);
         end
 
-        dataset_epoch_data(19, 1, m) = dataset_export(k, 11);
+        dataset_epoch_data(19, 1, m) = dataset_export(k, 10);
         dataset_epoch_data(19, 2, m) = dataset_export(l, 10);
         dataset_epoch_data(19, 3, m) = dataset_export(l, 11);
         m = m + 1;
         k = l;
     end
 end
+
+close(d2);
+close(fig2);
 
 %figure;
 %plot(sample_tdoa_time);

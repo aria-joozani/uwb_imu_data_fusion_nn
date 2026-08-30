@@ -1,0 +1,5 @@
+Task,Metric,Reason
+tdoa,mean_error_m,not stored in historical artifacts
+position,mean_error_m,not stored in historical artifacts
+position,std_error_m,sample-level errors not stored in a machine-readable artifact
+position,max_and_percentile_error_m,sample-level errors not stored in a machine-readable artifact

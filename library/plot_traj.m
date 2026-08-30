@@ -1,6 +1,6 @@
 function plot_traj(pos_vicon, Xpo, anchor_pos)
     FONTSIZE = 18;
-    figure('Color','w','Position',[100 100 800 600]);
+    figure('Name','traj','Color','w','Position',[100 100 800 600]);
     %ax = axes('Projection','3d');
 
     hold on;
