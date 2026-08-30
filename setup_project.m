@@ -8,7 +8,12 @@ function projectRoot = setup_project()
     projectRoot = fileparts(mfilename('fullpath'));
     addpath(projectRoot);
     addpath(fullfile(projectRoot, 'config'));
-    addpath(fullfile(projectRoot, 'library'));
+
+    sourceStages = {'data', 'preprocessing', 'uwb', 'localization', ...
+        'eskf', 'evaluation', 'visualization', 'utilities'};
+    for i = 1:numel(sourceStages)
+        addpath(fullfile(projectRoot, 'src', sourceStages{i}));
+    end
 
     scriptCategories = {'preprocessing', 'training', 'evaluation', ...
         'deployment', 'visualization'};

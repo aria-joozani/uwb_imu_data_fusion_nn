@@ -6,7 +6,7 @@ This document records the effective working tree inspected on 2026-08-30 at Git 
 
 The review environment is Windows with MATLAB R2025b (25.2). The thesis prompt names MATLAB R2022b as the original environment, so numerical and API compatibility with R2022b remains to be verified. Deep Learning Toolbox and Optimization Toolbox are installed in the review environment. The ESKF also uses MATLAB's `quaternion` and `quat2rotm` APIs.
 
-No MATLAB Project file, package namespace, Live Script, Simulink model, automated test suite, or experiment configuration system was found. The active implementation is a collection of scripts sharing the base workspace plus small functions in `library/`.
+No MATLAB Project file, package namespace, Live Script, Simulink model, or automated test suite was found. The active implementation is still a collection of scripts sharing the base workspace, but named baseline configuration now exists under `config/` and reusable functions are separated under `src/`.
 
 ## What the current system actually predicts
 
@@ -34,7 +34,7 @@ The inventory below explains the role of each important area rather than reprodu
 | `survey-results/` | Four processed survey TXT files, four NPZ files, four constellation plots, and raw survey text | Eight anchor positions and quaternions per constellation. The processing path that produced the processed survey files is not present. |
 | `export-data-set/` | 38 generated `_NN.csv` files plus `dataset_learning_all.mat`, about 8.4 GB | Older/full-rate generated network dataset. Untracked. |
 | `export-data-set-r/` | 38 generated `_NN.csv` files, about 520 MB | Current reduced dataset produced after `downsamp` applies an 8x reduction. Used by the organized FNN/CNN1/CNN2 training scripts. Ignored by Git. |
-| `library/` | Reusable MATLAB functions and `ESKF` | Sensor extraction, interpolation, downsampling, TDoA generation/solvers, plotting, and the filter class. |
+| `src/` | Reusable MATLAB pipeline stages | Data extraction, preprocessing, TDoA generation, localization solvers, ESKF, evaluation, plotting, and utilities. |
 | `scripts/` | Five responsibility folders | Preprocessing, training, evaluation, deployment, and visualization entry scripts. |
 | `models/active/` | Five reviewed FNN/CNN checkpoints | Checkpoints referenced by the organized active workflows. |
 | `models/legacy/` | Older CNN/LSTM checkpoints and training figures | Historical model family; same-numbered active and legacy models are not interchangeable. |
@@ -44,7 +44,7 @@ The inventory below explains the role of each important area rather than reprodu
 | archives (`*.zip`, `*.rar`) | Repository, library, network, and dataset archives | Unversioned snapshots with unclear provenance. They were inventoried but not extracted because live equivalents already exist. |
 | `ieee.m` | 577-line IEEE 802.15.4a channel simulation script | Standalone channel-model experiment; no reference from the localization pipeline was found. |
 
-There are 45 MATLAB files in the effective tree: most root files are scripts, while `library/` contains functions and one class. Generated results dominate the file count: 1,170 FIG files and 98 TXT logs.
+The tracked MATLAB implementation is split between workflow entry scripts in `scripts/`, named configuration in `config/`, and reusable functions/classes in `src/`. Generated results still dominate the local file count: 1,170 FIG files and 98 TXT logs were observed during the initial inventory.
 
 ## Dataset organization found on disk
 
@@ -134,7 +134,7 @@ There is no loop that reproducibly evaluates every flight and every model. The E
 
 ### Reporting and plots
 
-`plot_rms_ma.m` and `plot_position_rms.m` read manually maintained Excel summaries and generate thesis plots. `library/plot_pos*.m` and `library/plot_traj.m` create per-run figures.
+`plot_rms_ma.m` and `plot_position_rms.m` read manually maintained Excel summaries and generate thesis plots. `src/visualization/plot_pos*.m` and `src/visualization/plot_traj.m` create per-run figures.
 
 ## ESKF summary from the implementation
 

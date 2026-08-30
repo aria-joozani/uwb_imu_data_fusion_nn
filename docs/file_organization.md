@@ -17,7 +17,15 @@ changed. Git rename metadata preserves file history.
 |   |-- evaluation/
 |   |-- deployment/
 |   `-- visualization/
-|-- library/
+|-- src/
+|   |-- data/
+|   |-- preprocessing/
+|   |-- uwb/
+|   |-- localization/
+|   |-- eskf/
+|   |-- evaluation/
+|   |-- visualization/
+|   `-- utilities/
 |-- models/
 |   |-- active/
 |   `-- legacy/
@@ -55,6 +63,7 @@ legacy scripts and stored experiment provenance use those paths:
 | former `diagram/` tracked files | `assets/diagrams/` | thesis diagram assets |
 | root diagram generator | `tools/diagrams/` | development tool |
 | tracked MATLAB autosave | `archive/matlab-autosave/` | preserved non-active history |
+| former flat `library/` functions | `src/<pipeline-stage>/` | reusable stage implementation |
 
 Ignored root plots, logs, archives, workbook copies, PTQ tensors, and the binary
 baseline container were moved into `local-artifacts/`. The externally attributed
@@ -69,10 +78,11 @@ Start MATLAB in the repository root and run:
 projectRoot = setup_project();
 ```
 
-This adds `library/` and the five `scripts/` category folders to the MATLAB
-path. It deliberately does not add models, artifacts, archives, or local output
-directories. Legacy scripts still use base-workspace state and should be invoked
-from the repository root until the planned functional refactor is complete.
+This adds the eight explicit `src/` pipeline-stage folders and the five
+`scripts/` category folders to the MATLAB path. It deliberately does not add
+models, artifacts, archives, or local output directories. Legacy scripts still
+use base-workspace state and should be invoked from the repository root until
+the planned functional refactor is complete.
 
 Model loads and saves now use `models/active/` or `models/legacy/`. Deployment
 intermediates use ignored `local-artifacts/intermediates/`. The baseline entry
@@ -86,9 +96,9 @@ from scientific corrections so future numerical differences remain attributable.
 
 ## Validation
 
-- `setup_project` resolves preprocessing, training, evaluation, visualization,
-  and `library/ESKF.m` from their categorized paths.
-- MATLAB `checkcode` scanned 48 tracked MATLAB files; 22 known legacy findings
+- `setup_project` resolves entry scripts and reusable functions, including
+  `src/eskf/ESKF.m`, from their categorized paths.
+- MATLAB `checkcode` scanned 50 tracked MATLAB files; 22 known legacy findings
   remain, while `setup_project.m` and `run_baseline_evaluation.m` are clean.
 - The relocated baseline reproduced 21 flights, 336 long-form rows, 576 grouped
   summaries, and the same headline metrics.

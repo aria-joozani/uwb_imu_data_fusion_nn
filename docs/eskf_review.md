@@ -2,7 +2,7 @@
 
 ## Executive finding
 
-`library/ESKF.m` is a compact 9-error-state inertial/UWB filter with scalar TDoA updates. Its central model is recognizable, but it is not yet suitable as a thesis reference implementation: orientation used for inertial propagation can lag the stored quaternion, event timing is ambiguous, covariance injection is incomplete, biases are absent, and there are no filter-consistency tests. These are review findings only; no filter behavior was changed.
+`src/eskf/ESKF.m` is a compact 9-error-state inertial/UWB filter with scalar TDoA updates. Its central model is recognizable, but it is not yet suitable as a thesis reference implementation: orientation used for inertial propagation can lag the stored quaternion, event timing is ambiguous, covariance injection is incomplete, biases are absent, and there are no filter-consistency tests. These are review findings only; no filter behavior was changed.
 
 ## Implemented state
 

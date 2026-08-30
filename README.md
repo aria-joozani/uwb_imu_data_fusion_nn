@@ -28,7 +28,7 @@ Raw datasets remain local under `csv-data/`, `export-data-set*/`, and
 | `scripts/deployment/` | PTQ preparation, quantization, and ONNX export |
 | `scripts/visualization/` | standalone thesis plotting scripts |
 | `config/` | named, behavior-preserving experiment configurations and legacy metadata |
-| `library/` | reusable MATLAB functions and the ESKF class |
+| `src/` | reusable data, preprocessing, UWB, localization, ESKF, evaluation, and plotting stages |
 | `models/active/` | checkpoints used by the reviewed active workflows |
 | `models/legacy/` | older checkpoints and training artifacts |
 | `artifacts/baseline/` | compact historical source and derived baseline records |

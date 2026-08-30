@@ -44,11 +44,11 @@ These changes predated the review. They are committed to make the repository cle
 | `dataset_generator_runner.m` | Dataset selection | Output moved from `export-data-set` to `export-data-set-r`; loop begins at first file; progress text added | Includes a sixfold duplicate flight already flagged as leakage/weighting risk |
 | `fusion_eskf.m` | Evaluation script | Different hard-coded flight, logging/figure output, and position MA reporting | MA formula duplicates x and omits z; preserved as known defect |
 | `inference.m` | Evaluation script | 21-flight list, model/output selection, per-pair metrics, MA metrics, and saved figures | Target-row alignment and MA formula defects documented |
-| `library/ESKF.m` | Algorithm tuning | Acceleration/gyro noise changed from 2/0.1 to 0.1/0.01 | Numerical behavior change; provenance and validation unknown |
-| `library/downsamp.m` | Preprocessing behavior | Enabled three factor-2 reductions (overall factor 8) | Numerical/data-rate change; current reduced datasets reflect it |
-| `library/plot_pos.m` | Presentation | Added stable figure name `pos` | Behavior-preserving plotting metadata |
-| `library/plot_pos_err.m` | Presentation | Added stable figure name `pos_error` | Behavior-preserving plotting metadata |
-| `library/plot_traj.m` | Presentation | Added stable figure name `traj` | Behavior-preserving plotting metadata |
+| `src/eskf/ESKF.m` (then `library/ESKF.m`) | Algorithm tuning | Acceleration/gyro noise changed from 2/0.1 to 0.1/0.01 | Numerical behavior change; provenance and validation unknown |
+| `src/preprocessing/downsamp.m` (then `library/downsamp.m`) | Preprocessing behavior | Enabled three factor-2 reductions (overall factor 8) | Numerical/data-rate change; current reduced datasets reflect it |
+| `src/visualization/plot_pos.m` (then `library/plot_pos.m`) | Presentation | Added stable figure name `pos` | Behavior-preserving plotting metadata |
+| `src/visualization/plot_pos_err.m` (then `library/plot_pos_err.m`) | Presentation | Added stable figure name `pos_error` | Behavior-preserving plotting metadata |
+| `src/visualization/plot_traj.m` (then `library/plot_traj.m`) | Presentation | Added stable figure name `traj` | Behavior-preserving plotting metadata |
 
 The experimental modifications are intentionally not repaired in the cleanup commit. Correctness fixes require separate tests and separate commits so scientific differences remain attributable.
 
@@ -84,9 +84,9 @@ They remain classified as legacy and are not part of the baseline evaluation.
 
 ### Solvers and visualization
 
-- `library/solve_tdoa_nls_2d.m`
-- `library/solve_tdoa_nls_3d.m`
-- `library/tdoa_residuals_3d.m`
+- `src/localization/solve_tdoa_nls_2d.m`
+- `src/localization/solve_tdoa_nls_3d.m`
+- `src/localization/tdoa_residuals_3d.m`
 - `plot_anchors_3d.m`
 - `plot_position_rms.m`
 - `plot_rms_ma.m`

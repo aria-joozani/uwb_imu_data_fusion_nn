@@ -4,7 +4,7 @@
 
 This document records the mathematics that the repository currently implements. It is an audit, not a corrected specification. No algorithm was changed while preparing it. Statements marked **inferred** follow from code and data; statements marked **UNKNOWN** need an experiment, source publication, or sensor specification.
 
-The reviewed implementations are now organized under `scripts/{preprocessing,evaluation}/`, with `library/ESKF.m` and the TDoA helper functions remaining in `library/`.
+The reviewed entry scripts are organized under `scripts/{preprocessing,evaluation}/`; reusable equations now reside in the corresponding `src/{uwb,localization,eskf}/` stages.
 
 ## Core conventions
 
@@ -51,7 +51,7 @@ The innovation is \(r=z-\hat z\).
 
 ### Sign inconsistency
 
-`library/tdoa_residuals_3d.m` and the duplicate local residual in `inference_tdoa.m` instead predict
+`src/localization/tdoa_residuals_3d.m` and the duplicate local residual in `inference_tdoa.m` instead predict
 
 \[
 \|p-a_A\| - \|p-a_B\|,

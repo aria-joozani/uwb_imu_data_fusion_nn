@@ -50,7 +50,7 @@ flowchart TD
     PRED --> ENH[replace measured TDoA]
     ENH --> ERUN[ESKF orchestration]
     DS --> ERUN
-    ERUN --> ECLASS[library/ESKF.m]
+    ERUN --> ECLASS[src/eskf/ESKF.m]
     ECLASS --> PMET[position metrics]
     ECLASS --> PLOT[plot_pos / plot_pos_err / plot_traj]
     TMET --> LOG[result diary + figures]
@@ -66,7 +66,7 @@ This graph represents current source dependencies, not the desired architecture.
 dataset_generator_runner.m
   -> sets csv_file / anchors / export_csv_file in base workspace
   -> data_extractor.m
-       -> addpath('library')
+       -> setup_project adds explicit src stage folders
        -> extract_gt -> deleteNAN
        -> extract_tdoa -> deleteNAN
        -> extract_acc -> deleteNAN

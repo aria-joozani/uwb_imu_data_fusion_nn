@@ -26,10 +26,10 @@ The quoted headline baseline is recoverable from the Excel files, but it is a me
 | SCI-03 | P0 | Headline baseline values are TDoA errors, not the final position errors implied by the prompt | `result_overall_tdoa_*.xlsx`, `result_position_rms.xlsx` |
 | SCI-04 | P0 | Baseline inference stores a prediction for the next same-pair epoch at a sequential/current UWB row | `dataset_generator.m`, `inference.m` |
 | SCI-05 | P0 | Overall position MAE omits z and counts x twice | `fusion_eskf.m`, `inference.m` |
-| SCI-06 | P0 | Active NLS TDoA residual uses the opposite sign convention from data generation and ESKF | `library/tdoa_residuals_3d.m`, `inference_tdoa.m` |
+| SCI-06 | P0 | Active NLS TDoA residual uses the opposite sign convention from data generation and ESKF | `src/localization/tdoa_residuals_3d.m`, `inference_tdoa.m` |
 | SCI-07 | P0 review required | Integrated timeline assigns measurements found at `t(k-1)` to row `k`/time `t(k)`; ESKF corrects after propagating to `t(k)` | generation, inference, and fusion scripts |
-| SCI-08 | P0 review required | ESKF rotation matrix used in propagation lags the stored quaternion; attitude injection lacks an explicit covariance reset | `library/ESKF.m` |
-| SCI-09 | P0 / HIGH | Downsampling and ESKF process noise have uncommitted behavior changes with no regression record | `library/downsamp.m`, `library/ESKF.m` |
+| SCI-08 | P0 review required | ESKF rotation matrix used in propagation lags the stored quaternion; attitude injection lacks an explicit covariance reset | `src/eskf/ESKF.m` |
+| SCI-09 | P0 / HIGH | Downsampling and ESKF process noise had behavior changes with no original regression record | `src/preprocessing/downsamp.m`, `src/eskf/ESKF.m` |
 | REL-01 | P1 | No single reproducible baseline/evaluation entry point | repository-wide |
 | REL-02 | P1 | Model identity is ambiguous across same-named `models/active/` and `models/legacy/` checkpoints | model files and inference scripts |
 | REL-03 | P1 | Training definitions contain known runtime defects | `train_tdoa_net.m`, `train_tdoa_cnn_net3.m` |
@@ -176,7 +176,7 @@ The quoted headline baseline is recoverable from the Excel files, but it is a me
 
 **Finding:** `obj.R` is set from `q_{k-1}` after `q_k` has been computed, so the next propagation uses a rotation older than the stored previous quaternion. The measurement update injects a small-angle quaternion but does not perform an explicit covariance reset Jacobian.
 
-**Location:** `library/ESKF.m` prediction lines around quaternion/rotation updates and `UWB_correct` attitude injection.
+**Location:** `src/eskf/ESKF.m` prediction lines around quaternion/rotation updates and `UWB_correct` attitude injection.
 
 **Risk:** P0 review required.
 
@@ -194,7 +194,7 @@ The quoted headline baseline is recoverable from the Excel files, but it is a me
 
 **Finding:** Relative to Git HEAD, `downsamp` changed from no downsampling to three factor-2 passes, and ESKF process-noise constants changed from 2/0.1 to 0.1/0.01. Dataset feature 109 changed from ideal/ground-truth TDoA to measured TDoA.
 
-**Location:** current Git diff in `library/downsamp.m`, `library/ESKF.m`, and `dataset_generator.m`.
+**Location:** initial audited diff in current `src/preprocessing/downsamp.m`, `src/eskf/ESKF.m`, and `scripts/preprocessing/dataset_generator.m`.
 
 **Risk:** P0 / HIGH.
 
@@ -319,7 +319,7 @@ The quoted headline baseline is recoverable from the Excel files, but it is a me
 - **P2:** Integration and 17-sample feature construction are duplicated across `dataset_generator.m`, `inference.m`, `inference_tdoa.m`, and `inference_timesequnce.m`; the variants have already diverged in target alignment and history behavior.
 - **P2:** Metric formulas are repeated rather than centralized. “RMS,” “RMSE,” scalar TDoA RMSE, axis RMSE, 3-D RMSE, and position MAE are not named consistently.
 - **P2, resolved structurally:** The initial `.gitignore` ignored only three paths. Large generated datasets, FIG files, archives, spreadsheets, auto-save files, and training logs are now categorized and ignored; compact checkpoints and baseline evidence are tracked.
-- **P2:** `library/downsamp.m` contains a second local `isin` implementation while `library/isin.m` also exists.
+- **P2:** `src/preprocessing/downsamp.m` contains a second local `isin` implementation while `src/utilities/isin.m` also exists.
 - **P2:** `ieee.m` is a separate stochastic IEEE channel-model implementation with no active references. It should be classified/archived only after provenance review, not deleted.
 - **P2:** `models/active/`, `models/legacy/`, and local archives hold multiple model generations with no training manifest.
 - **P2:** GUI progress dialogs make batch/headless evaluation harder and mix computation with presentation.
