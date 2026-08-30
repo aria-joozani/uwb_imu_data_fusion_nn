@@ -22,6 +22,8 @@ function config = load_experiment_config(name, overrides)
     switch lower(string(name))
         case {"baseline", "baseline_legacy"}
             config = baseline_config();
+        case {"legacy_pipeline", "legacy_preprocessing"}
+            config = legacy_pipeline_config();
         otherwise
             error('config:UnknownExperiment', ...
                 'Unknown experiment configuration "%s".', string(name));

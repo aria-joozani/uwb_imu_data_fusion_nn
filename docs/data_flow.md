@@ -89,7 +89,7 @@ Input shape: Ng timestamps + Ng values per axis; Na target timestamps
 Output shape: Na x 3 synchronized gyro
 Units: degrees/s
 Purpose: create a six-channel IMU sample at accelerometer timestamps
-Function responsible: interp_meas / interp1(...,'linear','extrap')
+Function responsible: synchronize_sensor_data -> interp_meas
 ```
 
 The synchronized IMU matrix is:
@@ -107,7 +107,7 @@ Input: first TDoA, IMU, and Vicon timestamps
 Output: t_imu, t_tdoa, and retained t_vicon shifted by min_t
 Units: seconds
 Purpose: express active streams relative to a nominal common start
-Function responsible: data_extractor.m
+Function responsible: synchronize_sensor_data
 ```
 
 `min_t` is the minimum of the three first timestamps. Vicon samples are retained only where `t_vicon > min_t`, then shifted. TDoA and IMU arrays are shifted without trimming. End-of-flight overlap is not explicitly clipped.
@@ -119,7 +119,7 @@ Input shape: arbitrary R x C numeric array
 Output shape: approximately ceil(R/8) x C
 Units: unchanged
 Purpose: reduce IMU and per-pair TDoA rates
-Function responsible: downsamp
+Function responsible: preprocess_sensor_data
 ```
 
 `downsamp` selects `1:2:end` three times. It is applied to the IMU timestamp vector and matrix separately and to each TDoA pair array separately. It is not applied to Vicon.
@@ -133,7 +133,7 @@ Input shape: Nu x 4 [t,idA,idB,value]
 Output shape: eight variable-length arrays, then M x 4 sorted array
 Units: seconds, IDs, metres
 Purpose: keep the ring pairs 7->0,0->1,...,6->7 and downsample each pair independently
-Function responsible: extract_tdoa_meas, downsamp, sortrows
+Function responsible: preprocess_sensor_data
 ```
 
 Other anchor-pair combinations, if present, are discarded. The later feature builder uses only `idA` and assumes `idB` is the next ring anchor.
@@ -147,7 +147,7 @@ Input shape: Nv x 3 Vicon position, Nv timestamps, M UWB timestamps
 Output shape: M x 3 position
 Units: metres in the local/Vicon frame
 Purpose: position reference at each retained UWB measurement
-Function responsible: three interp1(...,'spline') calls in data_extractor.m
+Function responsible: preprocess_sensor_data
 ```
 
 No extrapolation option is supplied. Queries outside the Vicon interval produce non-finite values, which later create invalid generated rows.

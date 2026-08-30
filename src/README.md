@@ -7,7 +7,7 @@ under `config/`.
 | Stage | Responsibility | Current contents |
 |---|---|---|
 | `data/` | Load flights/surveys and extract sensor fields | `load_experiment_dataset`, `extract_*` functions |
-| `preprocessing/` | Resampling and synchronization | `downsamp`, `interp_meas`, `sync_pos` |
+| `preprocessing/` | Shared synchronization and sensor preprocessing | `synchronize_sensor_data`, `preprocess_sensor_data`, legacy helpers |
 | `uwb/` | Generate ideal TDoA sequences | ground-truth TDoA generation/simulation |
 | `localization/` | Estimate position from TDoA | 2-D/3-D NLS solvers and residual |
 | `eskf/` | Inertial/UWB state estimation | `ESKF` class |

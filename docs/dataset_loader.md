@@ -48,6 +48,10 @@ the former workspace variables (`data`, `gt_pose`, `tdoa`, `acc`, `gyr`,
 and inference scripts therefore retain their current downstream behavior while
 sharing one validated loading implementation.
 
+As of Section 20, the same wrapper passes the loaded structure through
+`synchronize_sensor_data` and `preprocess_sensor_data`; see
+`docs/preprocessing_pipeline.md` for that separate contract.
+
 ## Validation
 
 The loader is accepted when a representative const4 flight produces tables,

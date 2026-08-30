@@ -31,7 +31,7 @@ src/                    reusable pipeline implementation
 | Stage | Inputs | Outputs | Current boundary |
 |---|---|---|---|
 | Data | Imported sparse flight table | Per-sensor numeric arrays | `extract_*` functions |
-| Preprocessing | Sensor values and timestamps | Resampled/synchronized arrays | `downsamp`, `interp_meas`, `sync_pos` |
+| Preprocessing | Loaded dataset and legacy configuration | Synchronized and processed structures | `synchronize_sensor_data`, `preprocess_sensor_data` |
 | UWB | Ground-truth positions and surveyed anchors | Ideal TDoA range differences | `generate_tdoa_from_gt`, `simulate_tdoa_sequence_from_gt` |
 | Localization | Anchor pairs, TDoA values, initial position | NLS position and residuals | `solve_tdoa_nls_2d/3d`, `tdoa_residuals_3d` |
 | ESKF | Initial state/covariance and event updates | State/covariance histories | `ESKF` |

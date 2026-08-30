@@ -7,29 +7,24 @@ flowchart TD
     RAW[Raw flight CSV<br/>27 sparse sensor columns]
     SURVEY[Processed anchor survey TXT<br/>8 positions + 8 quaternions]
 
-    RAW --> LOAD[load_experiment_dataset]
-    SURVEY --> LOAD
-    LOAD --> EX[data_extractor.m legacy wrapper]
-    EX --> EGT[extract_gt]
-    EX --> ET[extract_tdoa]
-    EX --> EA[extract_acc]
-    EX --> EG[extract_gyro]
+    RAW --> EX[data_extractor.m legacy wrapper]
+    SURVEY --> EX
+    EX --> LOAD[load_experiment_dataset]
+    LOAD --> EGT[extract_gt]
+    LOAD --> ET[extract_tdoa]
+    LOAD --> EA[extract_acc]
+    LOAD --> EG[extract_gyro]
     EGT --> DN[deleteNAN]
     ET --> DN
     EA --> DN
     EG --> DN
-    EG --> IM[interp_meas<br/>gyro -> accelerometer time]
-    EA --> IM
-    IM --> DS[downsamp x8]
-    ET --> PAIRS[extract_tdoa_meas<br/>ring pairs 70,01,...,67]
-    PAIRS --> DS
-    EGT --> GTI[Vicon spline interpolation<br/>at downsampled UWB times]
-    DS --> GTI
-    GTI --> SIM[simulate_tdoa_sequence_from_gt]
-    SURVEY --> SIM
+    LOAD --> SYNC[synchronize_sensor_data]
+    SYNC --> IM[interp_meas<br/>gyro -> accelerometer time]
+    SYNC --> PRE[preprocess_sensor_data<br/>factor 8 + ring pairs + Vicon spline]
+    PRE --> SIM[simulate_tdoa_sequence_from_gt]
     SIM --> GTF[generate_tdoa_from_gt<br/>dB - dA in metres]
 
-    DS --> GEN[dataset_generator.m]
+    PRE --> GEN[dataset_generator.m]
     SIM --> GEN
     SURVEY --> GEN
     GEN --> FEAT[17x6 IMU + 2x3 anchors<br/>+ 2 measured TDoA]
@@ -42,15 +37,14 @@ flowchart TD
     NORM --> SPLIT[random epoch 70/15/15 split]
     SPLIT --> CKPT[SeriesNetwork checkpoint<br/>net + mu/sigma X/Y]
 
-    RAW --> INF[inference.m]
-    SURVEY --> INF
+    PRE --> INF[inference.m]
     CKPT --> INF
     INF --> IFEAT[duplicated feature construction]
     IFEAT --> PRED[predict ideal TDoA]
     PRED --> TMET[TDoA RMSE/MAE]
     PRED --> ENH[replace measured TDoA]
     ENH --> ERUN[ESKF orchestration]
-    DS --> ERUN
+    PRE --> ERUN
     ERUN --> ECLASS[src/eskf/ESKF.m]
     ECLASS --> PMET[position metrics]
     ECLASS --> PLOT[plot_pos / plot_pos_err / plot_traj]
@@ -73,11 +67,11 @@ dataset_generator_runner.m
        -> extract_tdoa -> deleteNAN
        -> extract_acc -> deleteNAN
        -> extract_gyro -> deleteNAN
-       -> interp_meas
-       -> downsamp
-       -> extract_tdoa_meas
-       -> simulate_tdoa_sequence_from_gt
-            -> generate_tdoa_from_gt
+       -> synchronize_sensor_data
+            -> interp_meas
+       -> preprocess_sensor_data
+            -> simulate_tdoa_sequence_from_gt
+                 -> generate_tdoa_from_gt
   -> dataset_generator.m
        -> isin
        -> interp1

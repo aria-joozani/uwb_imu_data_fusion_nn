@@ -80,7 +80,7 @@ The representative reduced generated file has 7,304 rows and 111 columns. It con
 
 ### Dataset generation
 
-`dataset_generator_runner.m` -> sets `csv_file`, `anchors`, and `export_csv_file` in the base workspace -> `data_extractor.m` -> `load_experiment_dataset` -> `interp_meas`, `downsamp`, `extract_tdoa_meas`, `simulate_tdoa_sequence_from_gt` -> `dataset_generator.m` -> constructs 17-sample features -> `writetable` to `export-data-set-r/*.csv`
+`dataset_generator_runner.m` -> sets `csv_file`, `anchors`, and `export_csv_file` in the base workspace -> `data_extractor.m` compatibility wrapper -> `load_experiment_dataset` -> `synchronize_sensor_data` -> `preprocess_sensor_data` -> `dataset_generator.m` -> constructs 17-sample features -> `writetable` to `export-data-set-r/*.csv`
 
 Important behavior:
 

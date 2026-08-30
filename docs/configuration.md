@@ -48,6 +48,14 @@ fixtures, and a bulk extraction would make accidental behavior changes hard to
 detect. Each group should move when its pipeline stage receives a test, as
 scheduled in `docs/refactoring_plan.md`.
 
+## Legacy preprocessing configuration
+
+Section 20 adds `load_experiment_config("legacy_pipeline")`. It records the
+existing gyro interpolation/extrapolation, common time-origin rule, Vicon start
+rule, factor-8 downsampling, ordered ring-pair list, spline interpolation, and
+ideal-TDoA generation switch. Per-flight CSV and anchor paths remain required
+overrides; the configuration does not silently choose a dataset.
+
 ## Behavior guarantee
 
 This step changes parameter ownership, not values. Acceptance requires the
