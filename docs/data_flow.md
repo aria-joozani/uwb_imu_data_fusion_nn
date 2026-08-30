@@ -13,7 +13,7 @@ Input shape: N x 27 table (representative N = 127,675 rows)
 Output shape: unchanged table
 Units: mixed; documented per field below
 Purpose: container for asynchronously sampled sensor streams
-Function responsible: readtable in data_extractor.m
+Function responsible: load_experiment_dataset
 ```
 
 The 27 columns are:

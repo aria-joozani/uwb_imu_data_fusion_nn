@@ -6,7 +6,7 @@ under `config/`.
 
 | Stage | Responsibility | Current contents |
 |---|---|---|
-| `data/` | Read sensor fields from imported flight tables | `extract_*` functions |
+| `data/` | Load flights/surveys and extract sensor fields | `load_experiment_dataset`, `extract_*` functions |
 | `preprocessing/` | Resampling and synchronization | `downsamp`, `interp_meas`, `sync_pos` |
 | `uwb/` | Generate ideal TDoA sequences | ground-truth TDoA generation/simulation |
 | `localization/` | Estimate position from TDoA | 2-D/3-D NLS solvers and residual |

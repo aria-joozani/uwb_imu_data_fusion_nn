@@ -7,8 +7,9 @@ flowchart TD
     RAW[Raw flight CSV<br/>27 sparse sensor columns]
     SURVEY[Processed anchor survey TXT<br/>8 positions + 8 quaternions]
 
-    RAW --> EX[data_extractor.m]
-    SURVEY --> EX
+    RAW --> LOAD[load_experiment_dataset]
+    SURVEY --> LOAD
+    LOAD --> EX[data_extractor.m legacy wrapper]
     EX --> EGT[extract_gt]
     EX --> ET[extract_tdoa]
     EX --> EA[extract_acc]
@@ -66,6 +67,7 @@ This graph represents current source dependencies, not the desired architecture.
 dataset_generator_runner.m
   -> sets csv_file / anchors / export_csv_file in base workspace
   -> data_extractor.m
+       -> load_experiment_dataset
        -> setup_project adds explicit src stage folders
        -> extract_gt -> deleteNAN
        -> extract_tdoa -> deleteNAN
