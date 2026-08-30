@@ -4,6 +4,8 @@
 
 This record classifies the workspace that existed before the first repository-cleanup commit. It distinguishes source and scientific evidence that belong in Git from large local data, generated output, backups, and ambiguous third-party material. Cleanup is non-destructive: ignored files remain on disk.
 
+This is a historical pre-organization record. The later responsibility-based move is documented in `file_organization.md`; paths in this document intentionally describe the state that was categorized before that move.
+
 Audit basis:
 
 - branch: `main`;

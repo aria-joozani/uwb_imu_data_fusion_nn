@@ -31,12 +31,12 @@ The quoted headline baseline is recoverable from the Excel files, but it is a me
 | SCI-08 | P0 review required | ESKF rotation matrix used in propagation lags the stored quaternion; attitude injection lacks an explicit covariance reset | `library/ESKF.m` |
 | SCI-09 | P0 / HIGH | Downsampling and ESKF process noise have uncommitted behavior changes with no regression record | `library/downsamp.m`, `library/ESKF.m` |
 | REL-01 | P1 | No single reproducible baseline/evaluation entry point | repository-wide |
-| REL-02 | P1 | Model identity is ambiguous across same-named root and `networks/` checkpoints | model files and inference scripts |
+| REL-02 | P1 | Model identity is ambiguous across same-named `models/active/` and `models/legacy/` checkpoints | model files and inference scripts |
 | REL-03 | P1 | Training definitions contain known runtime defects | `train_tdoa_net.m`, `train_tdoa_cnn_net3.m` |
 | REL-04 | P1 | Base-workspace scripts, `clear all`, and hard-coded paths create hidden dependencies | most root scripts |
 | REL-05 | P1 | Dataset list duplicates one flight six times, weighting it sixfold during training | training and PTQ file lists |
 | REL-06 | P1 | Column-wise NaN deletion can silently desynchronize fields | `extract_*.m`, `deleteNAN.m` |
-| REL-07 | P1 | Existing logs/results are mutable and not tied to configs or model hashes | `result/`, root XLSX files |
+| REL-07 | P1 | Existing logs/results are mutable and not tied to configs or model hashes | generated `result/` tree and historical XLSX evidence |
 | REL-08 | P1 | Random seeds are uncontrolled | training and PTQ scripts |
 | REL-09 | P1 | No automated or numerical regression tests exist | repository-wide |
 | MAIN-01 | P2 | Dataset integration and feature construction are copied across multiple scripts | generation and three inference scripts |
@@ -128,7 +128,7 @@ The quoted headline baseline is recoverable from the Excel files, but it is a me
 
 **Why suspicious:** The formula is arithmetically wrong even for an axis-sum definition, and an axis-sum is different from mean Euclidean position error.
 
-**Observed behavior:** Per-axis MAEs are calculated correctly immediately beforehand. `result/result_position_ma.xlsx` contains only NaNs, so no trustworthy consolidated position-MAE baseline exists.
+**Observed behavior:** Per-axis MAEs are calculated correctly immediately beforehand. `artifacts/baseline/source/result_position_ma.xlsx` contains only NaNs, so no trustworthy consolidated position-MAE baseline exists.
 
 **Recommended change:** Preserve the legacy printed value only for comparison. Define and test both `mean(abs(error), axis)` and `mean(vecnorm(error,2,2))`; select the thesis definition explicitly.
 
@@ -224,11 +224,11 @@ The quoted headline baseline is recoverable from the Excel files, but it is a me
 
 ### REL-02 - Ambiguous checkpoint identity
 
-**Finding:** Root and `networks/` contain different models with overlapping CNN names.
+**Finding:** `models/active/` and `models/legacy/` contain different models with overlapping CNN names.
 
 **Risk:** P1.
 
-**Observed behavior:** Root CNN1 has 12 layers; `networks/CNN1` has 16. Root CNN2 has 22 layers; `networks/CNN2` has 17. Statistics also differ.
+**Observed behavior:** Active CNN1 has 12 layers; legacy CNN1 has 16. Active CNN2 has 22 layers; legacy CNN2 has 17. Statistics also differ.
 
 **Recommended change:** Use immutable model IDs and a manifest containing path, SHA-256, architecture summary, training config, data manifest, and normalization hash.
 
@@ -288,7 +288,7 @@ The quoted headline baseline is recoverable from the Excel files, but it is a me
 
 **Risk:** P1.
 
-**Observed behavior:** Root and `result/` Excel summaries are duplicated; `result/result_position_ma.xlsx` is all NaN. Result artifacts are untracked and not ignored consistently.
+**Observed behavior at audit time:** Root and `result/` Excel summaries were duplicated, and the position-MA workbook was all NaN. The compact source files are now organized under `artifacts/baseline/source/`; generated result trees are ignored.
 
 **Recommended change:** Make each run directory immutable and self-describing: config, environment, hashes, metrics, predictions, log, and figures.
 
@@ -318,10 +318,10 @@ The quoted headline baseline is recoverable from the Excel files, but it is a me
 
 - **P2:** Integration and 17-sample feature construction are duplicated across `dataset_generator.m`, `inference.m`, `inference_tdoa.m`, and `inference_timesequnce.m`; the variants have already diverged in target alignment and history behavior.
 - **P2:** Metric formulas are repeated rather than centralized. “RMS,” “RMSE,” scalar TDoA RMSE, axis RMSE, 3-D RMSE, and position MAE are not named consistently.
-- **P2:** The current `.gitignore` ignores only three paths. Large generated datasets, 1,170 FIG files, root checkpoints, archives, spreadsheets, auto-save files, and training logs are untracked but unclassified.
+- **P2, resolved structurally:** The initial `.gitignore` ignored only three paths. Large generated datasets, FIG files, archives, spreadsheets, auto-save files, and training logs are now categorized and ignored; compact checkpoints and baseline evidence are tracked.
 - **P2:** `library/downsamp.m` contains a second local `isin` implementation while `library/isin.m` also exists.
 - **P2:** `ieee.m` is a separate stochastic IEEE channel-model implementation with no active references. It should be classified/archived only after provenance review, not deleted.
-- **P2:** Root, `networks/`, and archives hold multiple model generations with no manifest.
+- **P2:** `models/active/`, `models/legacy/`, and local archives hold multiple model generations with no training manifest.
 - **P2:** GUI progress dialogs make batch/headless evaluation harder and mix computation with presentation.
 - **P3:** Misspellings such as `infrence`, `timesequnce`, `intgrate`, `dateset`, `sreach`, `Ma`, `manula`, and `ccn_2` impede discovery but should be corrected only in small, behavior-neutral changes.
 

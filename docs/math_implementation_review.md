@@ -4,7 +4,7 @@
 
 This document records the mathematics that the repository currently implements. It is an audit, not a corrected specification. No algorithm was changed while preparing it. Statements marked **inferred** follow from code and data; statements marked **UNKNOWN** need an experiment, source publication, or sensor specification.
 
-The reviewed paths are `data_extractor.m`, `dataset_generator.m`, `inference*.m`, `fusion_eskf.m`, `library/ESKF.m`, and the TDoA helper functions in `library/`.
+The reviewed implementations are now organized under `scripts/{preprocessing,evaluation}/`, with `library/ESKF.m` and the TDoA helper functions remaining in `library/`.
 
 ## Core conventions
 

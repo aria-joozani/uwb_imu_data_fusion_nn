@@ -7,9 +7,9 @@ The repository contains four distinct dataset layers:
 1. raw multi-sensor flight CSVs under `csv-data/const*/`;
 2. processed anchor surveys under `survey-results/`;
 3. generated supervised-learning CSVs under `export-data-set/` and `export-data-set-r/`;
-4. result summaries, predictions/plots, and model checkpoints in the root, `networks/`, and `result/`.
+4. compact summaries under `artifacts/baseline/`, generated predictions/plots under `result/`, and checkpoints under `models/{active,legacy}/`.
 
-Only raw `csv-data/` is ignored by the current `.gitignore`. The other large derived artifacts are mostly untracked and have no manifest.
+Raw/generated datasets and the large result tree are ignored by `.gitignore`; compact baseline evidence and reviewed checkpoints are tracked. The datasets still have no immutable manifest.
 
 ## Raw schema
 

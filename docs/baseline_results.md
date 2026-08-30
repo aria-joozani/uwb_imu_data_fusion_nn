@@ -5,10 +5,11 @@
 The current repository can deterministically reconstruct the saved 21-flight summary artifacts through:
 
 ```matlab
-results = run_baseline_evaluation();
+config = load_experiment_config("baseline");
+results = run_baseline_evaluation(config);
 ```
 
-This is a **historical artifact baseline**, not a fresh inference run. It protects the numeric summaries already present in `result/*.xlsx` while the code is refactored. A live baseline cannot yet be claimed reproducible because the original run configuration, training seeds, exact preprocessing version, and checkpoint selection record were not saved, and the primary inference script has a documented target-row alignment problem.
+This is a **historical artifact baseline**, not a fresh inference run. It protects the numeric summaries organized under `artifacts/baseline/source/` while the code is refactored. A live baseline cannot yet be claimed reproducible because the original run configuration, training seeds, exact preprocessing version, and checkpoint selection record were not saved, and the primary inference script has a documented target-row alignment problem.
 
 No model was retrained and no scientific algorithm was changed to create this baseline.
 
@@ -16,15 +17,16 @@ No model was retrained and no scientific algorithm was changed to create this ba
 
 | File | Purpose |
 |---|---|
-| `results/baseline_results.csv` | Long-form flight/task/model/metric values, including explicit unavailable values |
-| `results/baseline_summary.csv` | Flight, trial, trajectory, constellation, and overall aggregations |
-| `results/baseline_unavailable_metrics.csv` | Metrics that cannot be reconstructed from saved artifacts and the reason |
-| `results/baseline_results.mat` | MATLAB structure containing metadata and all three tables |
+| `artifacts/baseline/derived/baseline_results.csv` | Long-form flight/task/model/metric values, including explicit unavailable values |
+| `artifacts/baseline/derived/baseline_summary.csv` | Flight, trial, trajectory, constellation, and overall aggregations |
+| `artifacts/baseline/derived/baseline_unavailable_metrics.csv` | Metrics that cannot be reconstructed from saved artifacts and the reason |
+| `artifacts/baseline/derived/baseline_results.mat` | Generated MATLAB structure containing metadata and all three tables; ignored by Git |
 
 The entry point refuses to overwrite these records by default. To regenerate them intentionally:
 
 ```matlab
-config = struct('overwrite', true);
+config = load_experiment_config("baseline");
+config.evaluation.overwrite = true;
 results = run_baseline_evaluation(config);
 ```
 
@@ -64,10 +66,10 @@ The raw CSVs and checkpoints are present, but the spreadsheets do not store a da
 
 | Artifact | Imported meaning | Completeness |
 |---|---|---|
-| `result/result_overall_tdoa_rms.xlsx` | Per-flight TDoA RMSE for raw/FNN/CNN1/CNN2 | 21x4 finite values |
-| `result/result_overall_tdoa_ma.xlsx` | Per-flight TDoA MAE for raw/FNN/CNN1/CNN2 | 21x4 finite values |
-| `result/result_position_rms.xlsx` | Per-flight position RMSE for ESKF using raw/FNN/CNN1/CNN2 observations | 21x4 finite values |
-| `result/result_position_ma.xlsx` | Intended per-flight position MAE | 21x4 values, all `NaN` |
+| `artifacts/baseline/source/result_overall_tdoa_rms.xlsx` | Per-flight TDoA RMSE for raw/FNN/CNN1/CNN2 | 21x4 finite values |
+| `artifacts/baseline/source/result_overall_tdoa_ma.xlsx` | Per-flight TDoA MAE for raw/FNN/CNN1/CNN2 | 21x4 finite values |
+| `artifacts/baseline/source/result_position_rms.xlsx` | Per-flight position RMSE for ESKF using raw/FNN/CNN1/CNN2 observations | 21x4 finite values |
+| `artifacts/baseline/source/result_position_ma.xlsx` | Intended per-flight position MAE | 21x4 values, all `NaN` |
 
 The first model column in the TDoA-RMSE workbook is named `eskf`, while the corresponding data and logs describe raw TDoA. The reconstruction normalizes this label to `raw` and retains the source-artifact path on every row.
 
@@ -75,11 +77,11 @@ The first model column in the TDoA-RMSE workbook is named `eskf`, while the corr
 
 | Model artifact | SHA-256 |
 |---|---|
-| `trained_tdoa_net_5.mat` | `CA2D796C4C85EA327DA141E297E8192A80D51571E64D5203A084A4C369797884` |
-| `trained_tdoa_net_fcc1.mat` | `ACFA6EEB66861189C093F020F7CEA0761FB6CFD86F433E4541871C5D83703405` |
-| `trained_tdoa_net_cnn_1.mat` | `8AFB50E2F5DC75D657ED9A8EBCA8AE4C4DCB649E9BDC563D73B2314434CBB55B` |
-| `trained_tdoa_net_cnn_2.mat` | `BC733D4ECB332FE180B11C11A8DB139D908F93665A208FBE7045D6BAD5FA774D` |
-| `trained_tdoa_net_cnn_3.mat` | `0BC92B3410954CB066EEB0AFCFD340645A86F16B6D9EEFB62BEF3210FFA1F8A5` |
+| `models/active/trained_tdoa_net_5.mat` | `CA2D796C4C85EA327DA141E297E8192A80D51571E64D5203A084A4C369797884` |
+| `models/active/trained_tdoa_net_fcc1.mat` | `ACFA6EEB66861189C093F020F7CEA0761FB6CFD86F433E4541871C5D83703405` |
+| `models/active/trained_tdoa_net_cnn_1.mat` | `8AFB50E2F5DC75D657ED9A8EBCA8AE4C4DCB649E9BDC563D73B2314434CBB55B` |
+| `models/active/trained_tdoa_net_cnn_2.mat` | `BC733D4ECB332FE180B11C11A8DB139D908F93665A208FBE7045D6BAD5FA774D` |
+| `models/active/trained_tdoa_net_cnn_3.mat` | `0BC92B3410954CB066EEB0AFCFD340645A86F16B6D9EEFB62BEF3210FFA1F8A5` |
 
 The spreadsheets do not identify checkpoint hashes. The table records candidates found in the repository, not a proven model-to-result lineage. CNN3 is not represented in the baseline spreadsheets.
 

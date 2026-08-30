@@ -68,21 +68,21 @@ The preserved legacy LSTM source reshapes a concatenated row stream into length-
 
 ## Saved checkpoint inspection
 
-The following describes the root checkpoints as loaded by MATLAB R2025b during this review. Hashes identify the exact artifacts; they do not prove training provenance.
+The following describes the checkpoints now organized under `models/active/`, as loaded by MATLAB R2025b during this review. Hashes identify the exact artifacts; they do not prove training provenance.
 
 | Checkpoint | Loaded architecture | SHA-256 |
 |---|---|---|
-| `trained_tdoa_net_5.mat` | FNN 110 -> 128 -> 64 -> 1, ReLU | `CA2D796C4C85EA327DA141E297E8192A80D51571E64D5203A084A4C369797884` |
-| `trained_tdoa_net_fcc1.mat` | FNN 110 -> 128 -> 64 -> 1, ReLU | `ACFA6EEB66861189C093F020F7CEA0761FB6CFD86F433E4541871C5D83703405` |
-| `trained_tdoa_net_cnn_1.mat` | 12-layer CNN: conv 9/16, pool, conv 5/32, FC32, output | `8AFB50E2F5DC75D657ED9A8EBCA8AE4C4DCB649E9BDC563D73B2314434CBB55B` |
-| `trained_tdoa_net_cnn_2.mat` | 22-layer CNN: kernels 20/10/5/3, channels 8/16/32/64, FC64/32 | `BC733D4ECB332FE180B11C11A8DB139D908F93665A208FBE7045D6BAD5FA774D` |
-| `trained_tdoa_net_cnn_3.mat` | 26-layer CNN: kernels 40/20/10/5/3, channels 8/16/32/64/64, FC64/32 | `0BC92B3410954CB066EEB0AFCFD340645A86F16B6D9EEFB62BEF3210FFA1F8A5` |
+| `models/active/trained_tdoa_net_5.mat` | FNN 110 -> 128 -> 64 -> 1, ReLU | `CA2D796C4C85EA327DA141E297E8192A80D51571E64D5203A084A4C369797884` |
+| `models/active/trained_tdoa_net_fcc1.mat` | FNN 110 -> 128 -> 64 -> 1, ReLU | `ACFA6EEB66861189C093F020F7CEA0761FB6CFD86F433E4541871C5D83703405` |
+| `models/active/trained_tdoa_net_cnn_1.mat` | 12-layer CNN: conv 9/16, pool, conv 5/32, FC32, output | `8AFB50E2F5DC75D657ED9A8EBCA8AE4C4DCB649E9BDC563D73B2314434CBB55B` |
+| `models/active/trained_tdoa_net_cnn_2.mat` | 22-layer CNN: kernels 20/10/5/3, channels 8/16/32/64, FC64/32 | `BC733D4ECB332FE180B11C11A8DB139D908F93665A208FBE7045D6BAD5FA774D` |
+| `models/active/trained_tdoa_net_cnn_3.mat` | 26-layer CNN: kernels 40/20/10/5/3, channels 8/16/32/64/64, FC64/32 | `0BC92B3410954CB066EEB0AFCFD340645A86F16B6D9EEFB62BEF3210FFA1F8A5` |
 
 The saved CNN3 has unique, automatically suffixed layer names and is loadable, while the current script repeats explicit names. Thus the checkpoint was not produced by the source exactly as it stands.
 
-The `networks/` directory holds additional, architecturally different files with overlapping model names, including an LSTM. There is no authoritative registry mapping thesis labels such as “CNN1” to one path, hash, generator version, split, or training run.
+The `models/legacy/` directory holds additional, architecturally different files with overlapping model names, including an LSTM. There is no authoritative registry mapping thesis labels such as “CNN1” to one path, hash, generator version, split, or training run.
 
-Normalization statistics also separate the root checkpoints into different populations. CNN1, CNN2, and FCC1 share one statistics set; `trained_tdoa_net_5.mat` and CNN3 use another. The exact source manifests that produced either set are **UNKNOWN**.
+Normalization statistics also separate the active checkpoints into different populations. CNN1, CNN2, and FCC1 share one statistics set; `trained_tdoa_net_5.mat` and CNN3 use another. The exact source manifests that produced either set are **UNKNOWN**.
 
 ## Inference paths
 

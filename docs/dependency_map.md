@@ -112,7 +112,7 @@ There is no shared dataset list, split function, normalizer, feature schema, mod
 | `inference.m` | Single-step FNN/CNN prediction; current file hard-codes FNN | `ESKF` | Sequential `uwb_enhanced(m)` assignment |
 | `inference_timesequnce.m` | Pair-wise three-step autoregressive rollout plus alpha filter | `ESKF` | Explicit `uwb_row_at_time(target_idx)` assignment |
 | `inference_tdoa.m` | Single-step CNN2 prediction | `solve_tdoa_nls_3d`/`2d` | Sliding window of 12 TDoAs; no ESKF |
-| legacy `inference_lstm.m` | LSTM checkpoint under `networks/` | `ESKF` | Preserved historical path; not active baseline |
+| legacy `inference_lstm.m` | LSTM checkpoint under `models/legacy/` | `ESKF` | Preserved historical path; not active baseline |
 | `fusion_eskf.m` | None; raw measured TDoA | `ESKF` | Raw-filter reference path |
 
 ## ESKF internal dependencies

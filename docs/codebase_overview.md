@@ -2,7 +2,7 @@
 
 ## Review scope and status
 
-This document describes the effective working tree inspected on 2026-08-30. The Git base is commit `a70cd27` on `main`, but the working tree is not clean: 9 tracked files are modified, 2 tracked LSTM scripts are deleted, and 52 top-level paths are untracked. Those changes and artifacts are treated as user-owned research work and were not altered by this review.
+This document records the effective working tree inspected on 2026-08-30 at Git base `a70cd27`. That initially dirty research snapshot was categorized and committed as `6978811`; the tracked files were subsequently organized by responsibility. Historical findings below still describe the audited algorithms, while paths now follow `docs/file_organization.md`.
 
 The review environment is Windows with MATLAB R2025b (25.2). The thesis prompt names MATLAB R2022b as the original environment, so numerical and API compatibility with R2022b remains to be verified. Deep Learning Toolbox and Optimization Toolbox are installed in the review environment. The ESKF also uses MATLAB's `quaternion` and `quat2rotm` APIs.
 
@@ -33,12 +33,14 @@ The inventory below explains the role of each important area rather than reprodu
 | `csv-data/` | 80 CSV files, about 2.17 GB | Raw multi-sensor flight CSVs plus one generated `_NN.csv` at the directory root. The raw files contain sparse columns for TDoA, accelerometer, gyro, ToF, optical flow, barometer, and Vicon pose. Ignored by Git. |
 | `survey-results/` | Four processed survey TXT files, four NPZ files, four constellation plots, and raw survey text | Eight anchor positions and quaternions per constellation. The processing path that produced the processed survey files is not present. |
 | `export-data-set/` | 38 generated `_NN.csv` files plus `dataset_learning_all.mat`, about 8.4 GB | Older/full-rate generated network dataset. Untracked. |
-| `export-data-set-r/` | 38 generated `_NN.csv` files, about 520 MB | Current reduced dataset produced after `downsamp` applies an 8x reduction. Used by the root FNN/CNN1/CNN2 training scripts. Untracked. |
-| `library/` | 23 MATLAB files | Sensor extraction, interpolation, downsampling, TDoA generation/solvers, plotting, and the `ESKF` handle class. Three new NLS helper files are untracked. |
-| `networks/` | Older CNN and LSTM checkpoints plus training figures | Historical model family. Architectures and normalization statistics differ from some same-named root checkpoints. |
-| repository root | Data-generation, training, inference, ESKF, PTQ, plotting, and export scripts; root model checkpoints | The active but unmodularized pipeline. Most newer scripts and all root model checkpoints are untracked. |
-| `result/` | 1,322 files in 115 subdirectories, about 566 MB | Per-flight diaries and figures, plus duplicated Excel summaries. Logs can contain multiple appended runs and even failed/outlier runs. |
-| `diagram/` and root images | Draw.io, FIG, PNG, JPG, SVG, and a Python plotting script | Thesis/architecture figures. The Python diagram describes an older pipeline that still includes deleted LSTM scripts. |
+| `export-data-set-r/` | 38 generated `_NN.csv` files, about 520 MB | Current reduced dataset produced after `downsamp` applies an 8x reduction. Used by the organized FNN/CNN1/CNN2 training scripts. Ignored by Git. |
+| `library/` | Reusable MATLAB functions and `ESKF` | Sensor extraction, interpolation, downsampling, TDoA generation/solvers, plotting, and the filter class. |
+| `scripts/` | Five responsibility folders | Preprocessing, training, evaluation, deployment, and visualization entry scripts. |
+| `models/active/` | Five reviewed FNN/CNN checkpoints | Checkpoints referenced by the organized active workflows. |
+| `models/legacy/` | Older CNN/LSTM checkpoints and training figures | Historical model family; same-numbered active and legacy models are not interchangeable. |
+| `result/` | Large generated per-flight tree | Diaries and figures remain local and ignored. The four compact Excel summaries moved to `artifacts/baseline/source/`. Logs can contain multiple appended runs and failed/outlier runs. |
+| `assets/diagrams/` and `tools/diagrams/` | Draw.io/exports and the Python generator | Thesis architecture assets and their generation tool. |
+| `artifacts/baseline/` | Four source XLSX and three derived CSV files | Compact historical behavior-preservation evidence. |
 | archives (`*.zip`, `*.rar`) | Repository, library, network, and dataset archives | Unversioned snapshots with unclear provenance. They were inventoried but not extracted because live equivalents already exist. |
 | `ieee.m` | 577-line IEEE 802.15.4a channel simulation script | Standalone channel-model experiment; no reference from the localization pipeline was found. |
 
@@ -100,7 +102,7 @@ Important behavior:
 - `train_tdoa_cnn_net1.m` -> 110x1 image input -> conv(9,16) -> pool -> conv(5,32) -> FC32 -> scalar -> `trained_tdoa_net_cnn_1.mat`
 - `train_tdoa_cnn_net2.m` -> four convolution blocks with kernels 20/10/5/3 and 8/16/32/64 channels -> FC64 -> FC32 -> scalar -> `trained_tdoa_net_cnn_2.mat`
 - `train_tdoa_cnn_net3.m` -> deeper experimental network. The source repeats layer names and is not currently a valid reproducible training definition, although a saved CNN3 checkpoint exists.
-- `train_tdoa_cnn_net.m` -> older CNN5 experiment using `export-data-set/` -> `networks/trained_tdoa_net_cnn_5.mat`.
+- `train_tdoa_cnn_net.m` -> older CNN5 experiment using `export-data-set/` -> `models/legacy/trained_tdoa_net_cnn_5.mat`.
 
 All active FNN/CNN training scripts normalize before splitting and use an uncontrolled `randperm` sample split.
 
@@ -112,7 +114,7 @@ The nominal state is six-dimensional `[position; velocity]`. Attitude is stored 
 
 ### Baseline neural inference and position evaluation
 
-`inference.m` -> selects one of 21 const4 flights by editing an index -> currently loads the root FNN checkpoint despite retaining a `net = '2'` variable -> duplicates integration and feature-building logic -> predicts enhanced TDoA -> calculates TDoA metrics -> replaces `uwb(:,3)` -> runs the ESKF -> calculates position metrics -> writes figures and an appended diary
+`inference.m` -> selects one of 21 const4 flights by editing an index -> currently loads the active FNN checkpoint despite retaining a `net = '2'` variable -> duplicates integration and feature-building logic -> predicts enhanced TDoA -> calculates TDoA metrics -> replaces `uwb(:,3)` -> runs the ESKF -> calculates position metrics -> writes figures and an appended diary
 
 There is no loop that reproducibly evaluates every flight and every model. The Excel tables appear to have been assembled outside a single auditable runner.
 
@@ -120,7 +122,7 @@ There is no loop that reproducibly evaluates every flight and every model. The E
 
 - `inference_timesequnce.m`: pair-wise autoregressive rollout over three history steps with an alpha filter (`alpha = 0.5`), then ESKF. Unlike `inference.m`, it maps a predicted target back to the target UWB row explicitly.
 - `inference_tdoa.m`: single-step neural TDoA enhancement followed by sliding-window nonlinear least-squares position estimation without ESKF.
-- Legacy tracked files `inference_lstm.m` and `train_tdoa_lstm_net.m`: the older LSTM workflow is preserved because its checkpoint remains under `networks/`; it is not part of the active baseline.
+- Legacy tracked files `inference_lstm.m` and `train_tdoa_lstm_net.m`: the older LSTM workflow is preserved because its checkpoint remains under `models/legacy/`; it is not part of the active baseline.
 
 ### Quantization/export
 
@@ -153,7 +155,7 @@ Coordinate transformation direction, exact survey/world frame definition, and IM
 
 ## Saved models found
 
-The root checkpoints are the ones referenced by current scripts:
+The `models/active/` checkpoints are the ones referenced by organized current scripts:
 
 | File | Saved network | Input/output |
 | --- | --- | --- |
@@ -163,7 +165,7 @@ The root checkpoints are the ones referenced by current scripts:
 | `trained_tdoa_net_cnn_3.mat` | 5 convolution blocks -> FC64-FC32-1 | 110x1x1 -> scalar TDoA |
 | `trained_tdoa_net_5.mat` | Saved network is FNN 128-64-1 despite the older source file defining a larger tanh network | 110 features -> scalar TDoA |
 
-The `networks/` directory contains different CNN1/CNN2/CNN3/CNN5 models and an LSTM checkpoint. Same-numbered root and `networks/` checkpoints are not interchangeable.
+The `models/legacy/` directory contains different CNN1/CNN2/CNN3/CNN5 models and an LSTM checkpoint. Same-numbered active and legacy checkpoints are not interchangeable.
 
 ## Reconciliation of the quoted baseline
 
@@ -185,7 +187,7 @@ The following remain deliberately unresolved rather than guessed:
 
 - authoritative train/validation/test flight split and whether the 21 flights are intended as a held-out set;
 - exact coordinate-frame names, axes, origins, and transform provenance;
-- which root or `networks/` checkpoints correspond to thesis labels FNN/CNN1/CNN2;
+- which active or legacy checkpoints correspond to thesis labels FNN/CNN1/CNN2;
 - MATLAB R2022b toolbox versions and original random seeds;
 - whether the quoted baseline is intended to describe TDoA error or final position error;
 - provenance of generated CSVs, Excel summaries, archives, and model files;

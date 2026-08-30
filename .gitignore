@@ -4,15 +4,11 @@
 /export-data-set-r/
 /survey-results/
 
-# Generated evaluation trees stay local. Keep only the four compact
-# historical summary workbooks used by run_baseline_evaluation.m.
-/result/*
-!/result/result_overall_tdoa_ma.xlsx
-!/result/result_overall_tdoa_rms.xlsx
-!/result/result_position_ma.xlsx
-!/result/result_position_rms.xlsx
+# Generated evaluation trees stay local. Compact baseline evidence is kept
+# under artifacts/baseline/ instead.
+/result/
 /saved_figures/
-/results/*.mat
+/artifacts/baseline/derived/*.mat
 
 # Root-level generated plots, workbook copies, and training logs.
 /*.fig
@@ -30,6 +26,7 @@
 *.rar
 *.zip
 
-# Local agent scratch state and third-party legacy code with unknown license.
-/MEMORY.md
-/ieee.m
+# Categorized local-only material and third-party code with unknown license.
+/local-artifacts/
+/.local/
+/external/unlicensed/
