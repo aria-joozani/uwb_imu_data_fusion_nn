@@ -49,7 +49,8 @@ YPred_fp32 = predict(net, XTest4D);
 YPred_fp32_real = YPred_fp32 * sigmaY + muY;
 YTest_real      = YTest(:)    * sigmaY + muY;
 
-rmse_fp32 = sqrt(mean((YPred_fp32_real(:) - YTest_real(:)).^2));
+metrics_fp32 = calculate_tdoa_metrics(YTest_real, YPred_fp32_real);
+rmse_fp32 = metrics_fp32.RMSE;
 fprintf('FP32 Test RMSE: %.6f\n', rmse_fp32);
 
 %% === 4) PTQ: Create quantizer, prepare, calibrate, quantize ===
@@ -85,7 +86,8 @@ YPred_int8 = localPredictQuantized(qNet, XTest4D, 2048);
 
 YPred_int8_real = YPred_int8 * sigmaY + muY;
 
-rmse_int8 = sqrt(mean((YPred_int8_real(:) - YTest_real(:)).^2));
+metrics_int8 = calculate_tdoa_metrics(YTest_real, YPred_int8_real);
+rmse_int8 = metrics_int8.RMSE;
 fprintf('INT8 PTQ Test RMSE: %.6f\n', rmse_int8);
 
 %% === 6) Plot comparison ===

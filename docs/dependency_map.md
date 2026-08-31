@@ -43,12 +43,12 @@ flowchart TD
     MPRED --> INF
     INF --> IFEAT[duplicated feature construction]
     IFEAT --> PRED[predict ideal TDoA]
-    PRED --> TMET[TDoA RMSE/MAE]
+    PRED --> TMET[calculate_tdoa_metrics]
     PRED --> ENH[replace measured TDoA]
     ENH --> ERUN[ESKF orchestration]
     PRE --> ERUN
     ERUN --> ECLASS[src/eskf/ESKF.m]
-    ECLASS --> PMET[position metrics]
+    ECLASS --> PMET[calculate_position_metrics]
     ECLASS --> PLOT[plot_pos / plot_pos_err / plot_traj]
     TMET --> LOG[result diary + figures]
     PMET --> LOG

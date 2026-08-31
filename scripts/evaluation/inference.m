@@ -222,10 +222,13 @@ uwb_enhanced_with_pair(:,3) = uwb_enhanced(1:max_num_of_epoch);
 error_raw = uwb_sim(:,3) - uwb(:,3);
 error_net = uwb_sim(:,3) - uwb_enhanced_with_pair(:,3);
 
-rms_raw = sqrt(mean((error_raw(:,1)).^2));
-rms_net = sqrt(mean((error_net(:,1)).^2));
-ma_raw  = mean(abs(error_raw(:,1)));
-ma_net  = mean(abs(error_net(:,1)));
+metrics_raw = calculate_tdoa_metrics(uwb_sim(:,3), uwb(:,3));
+metrics_net = calculate_tdoa_metrics( ...
+    uwb_sim(:,3), uwb_enhanced_with_pair(:,3));
+rms_raw = metrics_raw.RMSE;
+rms_net = metrics_net.RMSE;
+ma_raw = metrics_raw.MAE;
+ma_net = metrics_net.MAE;
 
 fprintf('The RMS error for uwb raw data is %.4f m\n', rms_raw);
 fprintf('The RMS error for uwb net data is %.4f m\n', rms_net);
@@ -259,10 +262,12 @@ for pid = pair_ids
     e_net = error_net(idx);
 
     % metrics
-    rmse_raw = sqrt(mean(e_raw.^2));
-    rmse_net = sqrt(mean(e_net.^2));
-    mae_raw  = mean(abs(e_raw));
-    mae_net  = mean(abs(e_net));
+    pair_metrics_raw = calculate_tdoa_metrics(e_raw, zeros(size(e_raw)));
+    pair_metrics_net = calculate_tdoa_metrics(e_net, zeros(size(e_net)));
+    rmse_raw = pair_metrics_raw.RMSE;
+    rmse_net = pair_metrics_net.RMSE;
+    mae_raw = pair_metrics_raw.MAE;
+    mae_net = pair_metrics_net.MAE;
 
     fprintf('Pair %d: RMSE raw=%.4f, RMSE enh=%.4f | MAE raw=%.4f, MAE enh=%.4f | N=%d\n', ...
         pid, rmse_raw, rmse_net, mae_raw, mae_net, sum(idx));
@@ -330,16 +335,16 @@ interp_gt = [x_interp(:), y_interp(:), z_interp(:)];
 position_k = eskf.Xpo(:, 1:3);  % Estimated position at time k
 velocity_k = eskf.Xpo(:, 4:6);  % Estimated velocity
 
-pos_error = position_k - interp_gt;
-rms_x = sqrt(mean((pos_error(:,1)).^2));
-rms_y = sqrt(mean((pos_error(:,2)).^2));
-rms_z = sqrt(mean((pos_error(:,3)).^2));
-RMS_all = sqrt(rms_x^2 + rms_y^2 + rms_z^2);
-
-ma_x  = mean(abs(pos_error(:,1)));
-ma_y  = mean(abs(pos_error(:,2)));
-ma_z  = mean(abs(pos_error(:,3)));
-ma_all  = mean(abs(ma_x) + abs(ma_y) + abs(ma_x));
+position_metrics = calculate_position_metrics(interp_gt, position_k);
+pos_error = position_metrics.ERROR_XYZ;
+rms_x = position_metrics.RMSE_X;
+rms_y = position_metrics.RMSE_Y;
+rms_z = position_metrics.RMSE_Z;
+RMS_all = position_metrics.RMS_ALL;
+ma_x = position_metrics.MAE_X;
+ma_y = position_metrics.MAE_Y;
+ma_z = position_metrics.MAE_Z;
+ma_all = position_metrics.LEGACY_MA_XXY;
 
 fprintf('The RMS error for position x is %.4f m\n', rms_x);
 fprintf('The RMS error for position y is %.4f m\n', rms_y);

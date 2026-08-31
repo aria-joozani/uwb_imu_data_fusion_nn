@@ -228,7 +228,8 @@ YPred_real = YPred * sigmaY + muY;
 YTest_real = YTest * sigmaY + muY;
 
 % Compute RMSE
-rmse = sqrt(mean((YPred_real - YTest_real).^2));
+testMetrics = calculate_tdoa_metrics(YTest_real, YPred_real);
+rmse = testMetrics.RMSE;
 fprintf('Test RMSE: %.6f\n', rmse);
 
 % Plot results

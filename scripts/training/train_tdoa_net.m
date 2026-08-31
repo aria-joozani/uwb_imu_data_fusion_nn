@@ -143,7 +143,8 @@ net = trainNetwork(XTrain, YTrain, layers, options);
 
 %% === Evaluate ===
 YPred = predict(net, XTest);
-rmse = sqrt(mean((YPred - YTest).^2));
+testMetrics = calculate_tdoa_metrics(YTest, YPred);
+rmse = testMetrics.RMSE;
 fprintf('Test RMSE: %.6f\n', rmse);
 
 %% === Save Results ===

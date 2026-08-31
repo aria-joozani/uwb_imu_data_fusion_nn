@@ -25,7 +25,7 @@ The quoted headline baseline is recoverable from the Excel files, but it is a me
 | SCI-02 | P0 / CRITICAL | Many nominal 21 evaluation flights are explicitly included in model training lists | FNN/CNN training lists versus `inference.m` |
 | SCI-03 | P0 | Headline baseline values are TDoA errors, not the final position errors implied by the prompt | `result_overall_tdoa_*.xlsx`, `result_position_rms.xlsx` |
 | SCI-04 | P0 | Baseline inference stores a prediction for the next same-pair epoch at a sequential/current UWB row | `dataset_generator.m`, `inference.m` |
-| SCI-05 | P0 | Overall position MAE omits z and counts x twice | `fusion_eskf.m`, `inference.m` |
+| SCI-05 | P0 historical | Overall position MAE omitted z and counted x twice | Central interface preserves it only as `LEGACY_MA_XXY`; historical logs remain affected |
 | SCI-06 | P0 | Active NLS TDoA residual uses the opposite sign convention from data generation and ESKF | `src/localization/tdoa_residuals_3d.m`, `inference_tdoa.m` |
 | SCI-07 | P0 review required | Integrated timeline assigns measurements found at `t(k-1)` to row `k`/time `t(k)`; ESKF corrects after propagating to `t(k)` | generation, inference, and fusion scripts |
 | SCI-08 | P0 review required | ESKF rotation matrix used in propagation lags the stored quaternion; attitude injection lacks an explicit covariance reset | `src/eskf/ESKF.m` |
@@ -120,9 +120,9 @@ The quoted headline baseline is recoverable from the Excel files, but it is a me
 
 ### SCI-05 - Incorrect aggregate position MAE
 
-**Finding:** `ma_all` is calculated from `ma_x + ma_y + ma_x`; z is omitted and x is duplicated.
+**Finding:** Historical `ma_all` was calculated from `ma_x + ma_y + ma_x`; z was omitted and x was duplicated.
 
-**Location:** `fusion_eskf.m` and `inference.m`.
+**Location:** Historical evaluation logs; the current compatibility variable is explicitly sourced from `calculate_position_metrics.LEGACY_MA_XXY`.
 
 **Risk:** P0 if this value is reported.
 
@@ -130,7 +130,7 @@ The quoted headline baseline is recoverable from the Excel files, but it is a me
 
 **Observed behavior:** Per-axis MAEs are calculated correctly immediately beforehand. `artifacts/baseline/source/result_position_ma.xlsx` contains only NaNs, so no trustworthy consolidated position-MAE baseline exists.
 
-**Recommended change:** Preserve the legacy printed value only for comparison. Define and test both `mean(abs(error), axis)` and `mean(vecnorm(error,2,2))`; select the thesis definition explicitly.
+**Recommended change:** Implemented for the software interface: preserve the legacy value only for comparison and report axis MAE plus canonical Euclidean `MAE_3D`. Thesis narrative and historical tables still require an explicit research decision and sample-level recomputation.
 
 **Expected impact:** Corrected position MAE will differ from logged values.
 
@@ -317,7 +317,7 @@ The quoted headline baseline is recoverable from the Excel files, but it is a me
 ## Maintainability and hygiene findings
 
 - **P2:** Integration and 17-sample feature construction are duplicated across `dataset_generator.m`, `inference.m`, `inference_tdoa.m`, and `inference_timesequnce.m`; the variants have already diverged in target alignment and history behavior.
-- **P2:** Metric formulas are repeated rather than centralized. “RMS,” “RMSE,” scalar TDoA RMSE, axis RMSE, 3-D RMSE, and position MAE are not named consistently.
+- **P2, substantially addressed:** Reference-vs-estimate TDoA and position metrics are centralized and explicitly named. NLS residual RMS and historical artifact aggregation remain separate by design.
 - **P2, resolved structurally:** The initial `.gitignore` ignored only three paths. Large generated datasets, FIG files, archives, spreadsheets, auto-save files, and training logs are now categorized and ignored; compact checkpoints and baseline evidence are tracked.
 - **P2:** `src/preprocessing/downsamp.m` contains a second local `isin` implementation while `src/utilities/isin.m` also exists.
 - **P2:** `ieee.m` is a separate stochastic IEEE channel-model implementation with no active references. It should be classified/archived only after provenance review, not deleted.

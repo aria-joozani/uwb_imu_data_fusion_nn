@@ -225,7 +225,8 @@ The code symmetrizes \(P\), but does not use the Joseph form, reset the covarian
 
 ## Position and TDoA metrics
 
-The scripts use scalar TDoA error \(e_i=\hat z_i-z_i^{GT}\) and compute
+The centralized interface preserves scalar TDoA error
+\(e_i=z_i^{GT}-\hat z_i\) and computes
 
 \[
 \mathrm{RMSE}_{TDoA}=\sqrt{\frac1N\sum_i e_i^2},
@@ -245,7 +246,12 @@ The intended component-aggregated MA quantity appears to be
 \mathrm{MA}_{xyz}=\mathrm{MAE}_x+\mathrm{MAE}_y+\mathrm{MAE}_z.
 \]
 
-`inference.m` and `fusion_eskf.m` implement `ma_x + ma_y + ma_x`, omitting z and counting x twice. The surrounding `mean(abs(...))` acts only on already-scalar values. Existing position-MA summaries are therefore invalid until recomputed.
+Historical `inference.m` and `fusion_eskf.m` implemented
+`ma_x + ma_y + ma_x`, omitting z and counting x twice. The centralized
+`calculate_position_metrics` function exposes that formula only as
+`LEGACY_MA_XXY` and separately calculates canonical Euclidean `MAE_3D`.
+Existing historical position-MA summaries remain invalid until recomputed from
+sample-level errors.
 
 `compare_tdoa_sim_vs_meas.m` labels `rmse*10e3` as millimetres. Metres-to-millimetres is multiplication by \(10^3\), so the printed value is ten times too large.
 

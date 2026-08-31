@@ -12,7 +12,7 @@ under `config/`.
 | `localization/` | Estimate position from TDoA | 2-D/3-D NLS solvers and residual |
 | `eskf/` | Inertial/UWB state estimation | `ESKF` class |
 | `models/` | Shared neural checkpoint loading and inference | TDoA model loader and predictor |
-| `evaluation/` | Compare scientific outputs | simulated/measured TDoA comparison |
+| `evaluation/` | Central metrics and scientific comparison | TDoA/position metrics and simulated/measured comparison |
 | `visualization/` | Reusable per-run scientific plots | position, error, and trajectory plots |
 | `utilities/` | Small domain-independent helpers | NaN removal and timestamp membership |
 

@@ -58,16 +58,16 @@ interp_gt = [x_interp(:), y_interp(:), z_interp(:)];
 position_k = eskf.Xpo(:, 1:3);  % Estimated position at time k
 velocity_k = eskf.Xpo(:, 4:6);  % Estimated velocity
 
-pos_error = position_k - interp_gt;
-rms_x = sqrt(mean((pos_error(:,1)).^2));
-rms_y = sqrt(mean((pos_error(:,2)).^2));
-rms_z = sqrt(mean((pos_error(:,3)).^2));
-RMS_all = sqrt(rms_x^2 + rms_y^2 + rms_z^2);
-
-ma_x  = mean(abs(pos_error(:,1)));
-ma_y  = mean(abs(pos_error(:,2)));
-ma_z  = mean(abs(pos_error(:,3)));
-ma_all  = mean(abs(ma_x) + abs(ma_y) + abs(ma_x));
+position_metrics = calculate_position_metrics(interp_gt, position_k);
+pos_error = position_metrics.ERROR_XYZ;
+rms_x = position_metrics.RMSE_X;
+rms_y = position_metrics.RMSE_Y;
+rms_z = position_metrics.RMSE_Z;
+RMS_all = position_metrics.RMS_ALL;
+ma_x = position_metrics.MAE_X;
+ma_y = position_metrics.MAE_Y;
+ma_z = position_metrics.MAE_Z;
+ma_all = position_metrics.LEGACY_MA_XXY;
 
 fprintf('The RMS error for position x is %.4f m\n', rms_x);
 fprintf('The RMS error for position y is %.4f m\n', rms_y);

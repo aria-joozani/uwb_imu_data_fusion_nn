@@ -28,9 +28,11 @@ function [rmse, mean_err, error_vector] = compare_tdoa_sim_vs_meas(tdoa_sim, tdo
         end
     end
 
-    % Compute metrics
-    rmse = sqrt(mean(error_vector.^2));
-    mean_err = mean(abs(error_vector));
+    % Preserve the existing measured-minus-simulated error vector while
+    % centralizing its sign-insensitive RMSE and MAE calculation.
+    metrics = calculate_tdoa_metrics(error_vector, zeros(size(error_vector)));
+    rmse = metrics.RMSE;
+    mean_err = metrics.MAE;
 
     fprintf("✅ TDOA comparison complete on %d matched entries\n", match_count);
     fprintf("🔹 RMSE:       %.3e mm\n", rmse*10e3);

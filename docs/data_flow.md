@@ -325,7 +325,11 @@ position_rmse_3d = sqrt(rmse_x^2 + rmse_y^2 + rmse_z^2)
                  = sqrt(mean(||position_error||_2^2))
 ```
 
-The printed aggregate position MAE is currently incorrect (`ma_x + ma_y + ma_x`). The standard Euclidean position MAE `mean(vecnorm(error,2,2))` is not calculated by the baseline scripts.
+Historical scripts printed an incorrect aggregate position MAE
+(`ma_x + ma_y + ma_x`). The shared metric interface now exposes that value only
+as `LEGACY_MA_XXY` and calculates canonical Euclidean position MAE as
+`mean(vecnorm(error,2,2))`. The historical baseline position-MAE artifact is
+still all-NaN and was not replaced.
 
 ## Sequence and boundary behavior
 

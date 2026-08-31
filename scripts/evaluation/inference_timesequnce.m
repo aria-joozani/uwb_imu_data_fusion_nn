@@ -220,8 +220,10 @@ close(d_inf);
 error_net = uwb_sim(:,3) - uwb_enhanced(1:max_num_of_epoch);
 error_raw = uwb_sim(:,3) - uwb(:,3);
 
-rms_raw = sqrt(mean((error_raw(:,1)).^2));
-rms_net = sqrt(mean((error_net(:,1)).^2));
+metrics_raw = calculate_tdoa_metrics(uwb_sim(:,3), uwb(:,3));
+metrics_net = calculate_tdoa_metrics(uwb_sim(:,3), uwb_enhanced);
+rms_raw = metrics_raw.RMSE;
+rms_net = metrics_net.RMSE;
 
 fprintf('The RMS error for uwb raw data is %.4f m\n', rms_raw);
 fprintf('The RMS error for uwb net data is %.4f m\n', rms_net);
@@ -296,11 +298,12 @@ interp_gt = [x_interp(:), y_interp(:), z_interp(:)];
 
 position_k = eskf.Xpo(:, 1:3);
 
-pos_error = position_k - interp_gt;
-rms_x = sqrt(mean((pos_error(:,1)).^2));
-rms_y = sqrt(mean((pos_error(:,2)).^2));
-rms_z = sqrt(mean((pos_error(:,3)).^2));
-RMS_all = sqrt(rms_x^2 + rms_y^2 + rms_z^2);
+position_metrics = calculate_position_metrics(interp_gt, position_k);
+pos_error = position_metrics.ERROR_XYZ;
+rms_x = position_metrics.RMSE_X;
+rms_y = position_metrics.RMSE_Y;
+rms_z = position_metrics.RMSE_Z;
+RMS_all = position_metrics.RMS_ALL;
 
 fprintf('The RMS error for position x is %.4f m\n', rms_x);
 fprintf('The RMS error for position y is %.4f m\n', rms_y);

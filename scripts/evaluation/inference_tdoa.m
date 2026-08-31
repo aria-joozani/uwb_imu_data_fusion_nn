@@ -189,8 +189,8 @@ disp("Compute TDOA error metrics...");
 error_raw = uwb_sim(:,3) - uwb(:,3);
 error_net = uwb_sim(:,3) - uwb_enhanced;
 
-metrics_tdoa_raw = compute_metrics_1d(error_raw);
-metrics_tdoa_net = compute_metrics_1d(error_net);
+metrics_tdoa_raw = calculate_tdoa_metrics(uwb_sim(:,3), uwb(:,3));
+metrics_tdoa_net = calculate_tdoa_metrics(uwb_sim(:,3), uwb_enhanced);
 
 fprintf('\n=== TDOA metrics (meters) ===\n');
 fprintf('RAW: RMSE=%.4f | MAE=%.4f | MedAE=%.4f | P95=%.4f | MAX=%.4f | Bias=%.4f\n', ...
@@ -224,8 +224,8 @@ for pid = pair_ids
     title(sprintf('TDOA error for Pair %d', pid));
     xlabel('Measurement index (within this pair)'); ylabel('Error (m)');
 
-    mr = compute_metrics_1d(error_raw(idx));
-    mn = compute_metrics_1d(error_net(idx));
+    mr = calculate_tdoa_metrics(uwb_sim(idx,3), uwb(idx,3));
+    mn = calculate_tdoa_metrics(uwb_sim(idx,3), uwb_enhanced(idx));
     fprintf('Pair %d -> RMSE raw=%.4f, nn=%.4f | P95 raw=%.4f, nn=%.4f\n', ...
         pid, mr.RMSE, mn.RMSE, mr.P95, mn.P95);
 end
@@ -300,7 +300,7 @@ gt_uwb = [x_gt(:), y_gt(:), z_gt(:)];
 
 pos_err = pos_tdoa_only - gt_uwb;
 
-metrics_pos = compute_metrics_xyz(pos_err);
+metrics_pos = calculate_position_metrics(gt_uwb, pos_tdoa_only);
 
 fprintf('\n=== Position metrics (TDOA-only, meters) ===\n');
 fprintf('RMSE_3D=%.4f | MAE_3D=%.4f | MedAE_3D=%.4f | P95_3D=%.4f | MAX_3D=%.4f\n', ...
@@ -325,36 +325,6 @@ plot(res_rms, 'LineWidth', 1);
 grid on; title('Residual RMS of TDOA fit (quality indicator)'); xlabel('UWB epoch'); ylabel('Residual RMS (m)');
 
 %% ===================== Local Functions =====================
-
-function S = compute_metrics_1d(e)
-    e = e(:);
-    S.RMSE  = sqrt(mean(e.^2));
-    S.MAE   = mean(abs(e));
-    S.MEDAE = median(abs(e));
-    S.P95   = prctile(abs(e),95);
-    S.MAX   = max(abs(e));
-    S.BIAS  = mean(e);
-    S.STD   = std(e);
-end
-
-function S = compute_metrics_xyz(err_xyz)
-    e = err_xyz;
-    en = sqrt(sum(e.^2,2));
-
-    S.RMSE_3D  = sqrt(mean(en.^2));
-    S.MAE_3D   = mean(abs(en));
-    S.MEDAE_3D = median(abs(en));
-    S.P95_3D   = prctile(en,95);
-    S.MAX_3D   = max(en);
-
-    S.RMSE_X = sqrt(mean(e(:,1).^2));
-    S.RMSE_Y = sqrt(mean(e(:,2).^2));
-    S.RMSE_Z = sqrt(mean(e(:,3).^2));
-
-    S.BIAS_X = mean(e(:,1));
-    S.BIAS_Y = mean(e(:,2));
-    S.BIAS_Z = mean(e(:,3));
-end
 
 function r = tdoa_residuals_3d(p, pid_vec, d_vec, anchor_position)
     p = p(:).';
