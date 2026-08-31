@@ -59,7 +59,10 @@ The innovation is \(r=z-\hat z\).
 
 then subtract the stored observation. This is the negative of the generator/ESKF convention. Unless `d_vec` is negated before these solvers are called—and it is not visibly negated—the standalone nonlinear least-squares position path has a sign defect.
 
-Verification required: one synthetic point with known anchors must produce the same signed value through generation, ESKF measurement prediction, and both NLS solvers.
+Section 24 synthetic verification confirms the mismatch: both NLS solvers
+recover a known point only when generated `d_B-d_A` measurements are negated.
+The behavior-preserving test records this incompatibility; it does not correct
+the sign. See `high_priority_test_results.md`.
 
 ## Dataset sample construction
 

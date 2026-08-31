@@ -27,6 +27,8 @@ results = run_project_tests();
 The suite uses synthetic fixtures for loader and preprocessing tests, checks the
 shared metric and model interfaces, and protects the compact historical baseline.
 See `docs/automated_validation.md` for its scope and current limitations.
+Section 24 findings, including the characterized NLS sign incompatibility, are
+recorded in `docs/high_priority_test_results.md`.
 
 ## Layout
 
