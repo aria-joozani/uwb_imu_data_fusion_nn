@@ -18,6 +18,16 @@ The historical baseline reads compact evidence from `artifacts/baseline/source/`
 Raw datasets remain local under `csv-data/`, `export-data-set*/`, and
 `survey-results/`.
 
+Run the automated validation suite from the repository root with:
+
+```matlab
+results = run_project_tests();
+```
+
+The suite uses synthetic fixtures for loader and preprocessing tests, checks the
+shared metric and model interfaces, and protects the compact historical baseline.
+See `docs/automated_validation.md` for its scope and current limitations.
+
 ## Layout
 
 | Directory | Contents |
@@ -34,6 +44,7 @@ Raw datasets remain local under `csv-data/`, `export-data-set*/`, and
 | `artifacts/baseline/` | compact historical source and derived baseline records |
 | `assets/diagrams/` | editable Draw.io sources and exported diagrams |
 | `docs/` | code, data, mathematics, leakage, and refactoring reviews |
+| `tests/` | automated unit, contract, model-interface, and regression tests |
 | `local-artifacts/` | ignored logs, plots, archives, and large intermediates |
 
 See `docs/file_organization.md` for the full move map and execution rules.

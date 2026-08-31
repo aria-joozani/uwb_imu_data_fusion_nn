@@ -6,7 +6,7 @@ This document records the effective working tree inspected on 2026-08-30 at Git 
 
 The review environment is Windows with MATLAB R2025b (25.2). The thesis prompt names MATLAB R2022b as the original environment, so numerical and API compatibility with R2022b remains to be verified. Deep Learning Toolbox and Optimization Toolbox are installed in the review environment. The ESKF also uses MATLAB's `quaternion` and `quat2rotm` APIs.
 
-No MATLAB Project file, package namespace, Live Script, Simulink model, or automated test suite was found. The active implementation is still a collection of scripts sharing the base workspace, but named baseline configuration now exists under `config/` and reusable functions are separated under `src/`.
+No MATLAB Project file, package namespace, Live Script, or Simulink model was found. The active implementation is still largely a collection of scripts sharing the base workspace, but named baseline configuration exists under `config/`, reusable functions are separated under `src/`, and an automated MATLAB test suite now covers extracted pipeline contracts and historical baseline evidence.
 
 ## What the current system actually predicts
 

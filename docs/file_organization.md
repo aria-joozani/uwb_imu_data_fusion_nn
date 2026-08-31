@@ -11,6 +11,8 @@ changed. Git rename metadata preserves file history.
 ```text
 .
 |-- setup_project.m
+|-- run_project_tests.m
+|-- tests/
 |-- scripts/
 |   |-- preprocessing/
 |   |-- training/
@@ -101,6 +103,8 @@ from scientific corrections so future numerical differences remain attributable.
   `src/eskf/ESKF.m`, from their categorized paths.
 - MATLAB `checkcode` scanned 50 tracked MATLAB files; 22 known legacy findings
   remain, while `setup_project.m` and `run_baseline_evaluation.m` are clean.
+- `run_project_tests` provides the permanent automated validation entry point;
+  its current scope and exclusions are recorded in `docs/automated_validation.md`.
 - The relocated baseline reproduced 21 flights, 336 long-form rows, 576 grouped
   summaries, and the same headline metrics.
 - SHA-256 hashes for all five active checkpoints are unchanged after the move.
