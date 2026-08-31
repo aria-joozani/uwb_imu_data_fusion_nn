@@ -29,6 +29,8 @@ shared metric and model interfaces, and protects the compact historical baseline
 See `docs/automated_validation.md` for its scope and current limitations.
 Section 24 findings, including the characterized NLS sign incompatibility, are
 recorded in `docs/high_priority_test_results.md`.
+The frozen sample-level regression fixture and comparison policy are documented
+in `docs/refactoring_validation.md`.
 
 ## Layout
 

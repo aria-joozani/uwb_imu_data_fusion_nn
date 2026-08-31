@@ -24,6 +24,7 @@ incomplete. This makes a failed validation visible to MATLAB batch jobs and CI.
 | `test_tdoa_solver.m` | Known-position 2-D/3-D NLS recovery under the native solver convention and characterization of its sign incompatibility with generated measurements |
 | `test_model_interface.m` | Shared FNN prediction equivalence, checkpoint normalization reuse, feature-width validation, and unknown-model rejection |
 | `test_baseline_regression.m` | Historical 21-flight record counts and published aggregate TDoA/position values from compact baseline artifacts |
+| `regression/test_pipeline_regression.m` | Frozen sample-level loader, synchronization, downsampling, ordering, ground-truth interpolation, ideal-TDoA, and metadata outputs |
 
 The loader and preprocessing tests generate temporary synthetic inputs and do
 not depend on the multi-gigabyte local datasets. The model test requires Deep
@@ -32,9 +33,9 @@ uses the tracked compact evidence under `artifacts/baseline/`.
 
 ## Section 23 validation record
 
-On 2026-09-01, MATLAB R2025b discovered and passed all 20 tests with no failed
+On 2026-09-01, MATLAB R2025b discovered and passed all 23 tests with no failed
 or incomplete results. MATLAB Code Analyzer reported zero findings across the
-runner and Section 23/24 test files. The model smoke test may emit a MATLAB GPU
+runner and Section 23-25 test files. The model smoke test may emit a MATLAB GPU
 support warning on older devices; this is informational and does not change the
 test result.
 
